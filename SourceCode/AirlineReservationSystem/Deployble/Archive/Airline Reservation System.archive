@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Repository:repository xmlns:Repository="http://www.tibco.com/xmlns/repo/types/2002">
+    <enterpriseArchive>
+        <sharedArchive name="Shared Archive">
+            <resourceType>shared.archive.resource</resourceType>
+            <authorProperty>admin</authorProperty>
+        </sharedArchive>
+        <processArchive name="Process Archive">
+            <resourceType>process.archive.resource</resourceType>
+            <authorProperty>admin</authorProperty>
+            <processProperty>/Admin_Module/Admin_RestService/Admin_Flight_Update.process,/Admin_Module/Admin_RestService/Admin_Login.process,/Admin_Module/Admin_RestService/Admin_New_Flight_Details.process,/RestServices/Flight_Search.process,/RestServices/Seat_Availability.process,/RestServices/User_Login.process,/RestServices/User_Registration.process</processProperty>
+        </processArchive>
+        <versionProperty>6</versionProperty>
+        <authorProperty>admin</authorProperty>
+        <addServiceSettableGvars>true</addServiceSettableGvars>
+        <name>Airline Reservation System</name>
+        <designer>
+            <lockedProperties/>
+            <fixedChildren/>
+            <resourceDescriptions/>
+        </designer>
+        <fileLocationProperty>C:\Suma\TIBCOBW5_workspace\Workspace\Airline Reservation System\Deployble\EAR\ArlineReservation.ear</fileLocationProperty>
+    </enterpriseArchive>
+</Repository:repository>

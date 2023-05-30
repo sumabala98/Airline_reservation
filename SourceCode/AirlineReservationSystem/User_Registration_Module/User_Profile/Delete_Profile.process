@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:CustomFuction="java://java_uuidcode.java_uuidcode" xmlns:ns12="http://www.tibco.com/pe/GenerateErrorActivity/InputSchema" xmlns:pfx="http://www.tibco.com/schemas/Airline Reservation System/Schemas/User_Registration/Schema.xsd3" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns2="http://www.tibco.com/pe/EngineTypes" xmlns:ns1="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Common_Logging/Schema.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:pfx4="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Common_Logging/Schema.xsd3" xmlns:pfx3="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Flight_Reservation/Schema.xsd2" xmlns:pfx2="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Schema.xsd3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <xsd:import namespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Schema.xsd3" schemaLocation="/Schemas/Payload.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/User_Registration/Schema.xsd3" schemaLocation="/Schemas/User_Registration/Get_User.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Flight_Reservation/Schema.xsd2" schemaLocation="/Schemas/User_Registration/Registration_Response.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Common_Logging/Schema.xsd3" schemaLocation="/Schemas/Common_Logging/Exception.xsd"/>
+    <pd:name>User_Registration_Module/User_Profile/Delete_Profile.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType ref="pfx:Get_User"/>
+    <pd:startX>64</pd:startX>
+    <pd:startY>92</pd:startY>
+    <pd:returnCoercions>
+        <pd:coercion xpath="$_error/ns2:ErrorReport/Data/*" type="pfx4:RootType"/>
+    </pd:returnCoercions>
+    <pd:returnBindings>
+        <xsl:choose>
+            <xsl:when test="contains($_error/ns2:ErrorReport/Data/*/pfx4:Message_Code,'101') or&#xA;contains($_error/ns2:ErrorReport/Data/*/pfx4:Message_Code,'102') or&#xA;contains($_error/ns2:ErrorReport/Data/*/pfx4:Message_Code,'108')">
+                <root>
+                    <Res_Code>
+                        <xsl:value-of select="$_error/ns2:ErrorReport/Data/*/pfx4:Message_Code"/>
+                    </Res_Code>
+                    <Message>
+                        <xsl:value-of select="$_error/ns2:ErrorReport/Data/*/pfx4:Message"/>
+                    </Message>
+                </root>
+            </xsl:when>
+            <xsl:when test="exists($_error/ns2:ErrorReport)">
+                <root>
+                    <Res_Code>
+                        <xsl:value-of select="$_error/ns2:ErrorReport/MsgCode"/>
+                    </Res_Code>
+                    <Message>
+                        <xsl:value-of select="$_error/ns2:ErrorReport/Msg"/>
+                    </Message>
+                </root>
+            </xsl:when>
+            <xsl:otherwise>
+                <root>
+                    <Res_Code>
+                        <xsl:value-of select="200"/>
+                    </Res_Code>
+                    <Message>
+                        <xsl:value-of select="'User Profile Deleted'"/>
+                    </Message>
+                </root>
+            </xsl:otherwise>
+        </xsl:choose>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="Res_Code" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="Message" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:endType>
+    <pd:endX>694</pd:endX>
+    <pd:endY>91</pd:endY>
+    <pd:errorSchemas>
+        <Schema ref="pfx4:Root"/>
+    </pd:errorSchemas>
+    <pd:processVariables>
+        <correlation_id>
+            <xsd:element name="root" type="xsd:string"/>
+        </correlation_id>
+    </pd:processVariables>
+    <pd:targetNamespace>http://xmlns.example.com/1680599352637</pd:targetNamespace>
+    <pd:activity name="Assign">
+        <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
+        <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
+        <pd:x>203</pd:x>
+        <pd:y>92</pd:y>
+        <config>
+            <variableName>correlation_id</variableName>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <xsl:value-of xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="CustomFuction:getUUID()"/>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>496</pd:x>
+        <pd:y>200</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Delete_Profile">
+        <pd:type>com.tibco.plugin.jdbc.JDBCUpdateActivity</pd:type>
+        <pd:resourceType>ae.activities.JDBCUpdateActivity</pd:resourceType>
+        <pd:x>446</pd:x>
+        <pd:y>92</pd:y>
+        <config>
+            <timeout>10</timeout>
+            <commit>false</commit>
+            <emptyStrAsNil>false</emptyStrAsNil>
+            <statement>Delete From AIRLINE_USER_REGISTRATION
+where EMAIL=?'</statement>
+            <Prepared_Param_DataType>
+                <parameter>
+                    <parameterName>Email</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+            </Prepared_Param_DataType>
+            <jdbcSharedConfig>/Connections/Login/JDBC Connection.sharedjdbc</jdbcSharedConfig>
+        </config>
+        <pd:inputBindings>
+            <jdbcUpdateActivityInput>
+                <Email>
+                    <xsl:choose>
+                        <xsl:when test="exists($Start/pfx:Get_User/pfx:Email)">
+                            <xsl:value-of select="$Start/pfx:Get_User/pfx:Email"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </Email>
+            </jdbcUpdateActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="EndLog">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>542</pd:x>
+        <pd:y>92</pd:y>
+        <config>
+            <processName>/Common_Module/CommonLog.process</processName>
+        </config>
+        <pd:inputBindings>
+            <ns1:LogDetails>
+                <ns1:LogHeaders>
+                    <ns1:Correlation_Id>
+                        <xsl:value-of select="$correlation_id/root"/>
+                    </ns1:Correlation_Id>
+                    <ns1:Application_Name>
+                        <xsl:value-of select="'User_Regisration_Module'"/>
+                    </ns1:Application_Name>
+                    <ns1:Process_Name>
+                        <xsl:value-of select="'Delete_profile'"/>
+                    </ns1:Process_Name>
+                    <ns1:Activity_Name>
+                        <xsl:value-of select="'Jdbc_Update'"/>
+                    </ns1:Activity_Name>
+                    <ns1:LogType>
+                        <xsl:value-of select="'END'"/>
+                    </ns1:LogType>
+                    <ns1:Message_Type>
+                        <xsl:value-of select="'ResponseLog'"/>
+                    </ns1:Message_Type>
+                    <ns1:Status>
+                        <xsl:value-of select="'End'"/>
+                    </ns1:Status>
+                    <ns1:Timestamp>
+                        <xsl:value-of select="current-dateTime()"/>
+                    </ns1:Timestamp>
+                    <ns1:Payload>
+                        <xsl:value-of select="$Delete_Profile/jdbcUpdateActivityOutput/noOfUpdates"/>
+                    </ns1:Payload>
+                </ns1:LogHeaders>
+            </ns1:LogDetails>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="ErrorLog">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>624</pd:x>
+        <pd:y>200</pd:y>
+        <config>
+            <processName>/Common_Module/CommonLog.process</processName>
+        </config>
+        <pd:inputBindings>
+            <ns1:LogDetails>
+                <ns1:LogHeaders>
+                    <ns1:Correlation_Id>
+                        <xsl:value-of select="$correlation_id/root"/>
+                    </ns1:Correlation_Id>
+                    <ns1:Application_Name>
+                        <xsl:value-of select="'User_Registration'"/>
+                    </ns1:Application_Name>
+                    <ns1:Process_Name>
+                        <xsl:value-of select="'Delete_Profile'"/>
+                    </ns1:Process_Name>
+                    <ns1:Activity_Name>
+                        <xsl:value-of select="'catch All'"/>
+                    </ns1:Activity_Name>
+                    <ns1:LogType>
+                        <xsl:value-of select="'Error'"/>
+                    </ns1:LogType>
+                    <ns1:Message_Type>
+                        <xsl:value-of select="'Error Message'"/>
+                    </ns1:Message_Type>
+                    <ns1:Status>
+                        <xsl:value-of select="'Error'"/>
+                    </ns1:Status>
+                    <ns1:Timestamp>
+                        <xsl:value-of select="current-dateTime()"/>
+                    </ns1:Timestamp>
+                </ns1:LogHeaders>
+                <ns1:ErrorDetails>
+                    <ns1:ErrorCode>
+                        <xsl:value-of select="$_error/ns2:ErrorReport/MsgCode"/>
+                    </ns1:ErrorCode>
+                    <ns1:Error_Message>
+                        <xsl:value-of select="$Catch/exceptiondata/*"/>
+                    </ns1:Error_Message>
+                </ns1:ErrorDetails>
+            </ns1:LogDetails>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Generate Error">
+        <pd:type>com.tibco.pe.core.GenerateErrorActivity</pd:type>
+        <pd:resourceType>ae.activities.throw</pd:resourceType>
+        <pd:x>66</pd:x>
+        <pd:y>200</pd:y>
+        <config>
+            <faultName>Schema</faultName>
+        </config>
+        <pd:inputBindings>
+            <ns12:ActivityInput>
+                <xsl:choose xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+                    <xsl:when test="string-length($Start/pfx:Get_User/pfx:Email)=0">
+                        <data>
+                            <pfx4:Root>
+                                <pfx4:Message>
+                                    <xsl:value-of select="'Email_ID should not be Empty'"/>
+                                </pfx4:Message>
+                                <pfx4:Message_Code>
+                                    <xsl:value-of select="'101'"/>
+                                </pfx4:Message_Code>
+                            </pfx4:Root>
+                        </data>
+                    </xsl:when>
+                    <xsl:when test="not(CustomFuction:matchRegex($Start/pfx:Get_User/pfx:Email,'^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$'))">
+                        <data>
+                            <pfx4:Root>
+                                <pfx4:Message>
+                                    <xsl:value-of select="' Email_ID not Valid'"/>
+                                </pfx4:Message>
+                                <pfx4:Message_Code>
+                                    <xsl:value-of select="'102'"/>
+                                </pfx4:Message_Code>
+                            </pfx4:Root>
+                        </data>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <data>
+                            <pfx4:Root>
+                                <pfx4:Message>
+                                    <xsl:value-of select="'Invalid Input'"/>
+                                </pfx4:Message>
+                                <pfx4:Message_Code>
+                                    <xsl:value-of select="'108'"/>
+                                </pfx4:Message_Code>
+                            </pfx4:Root>
+                        </data>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </ns12:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="StartLog">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>317</pd:x>
+        <pd:y>92</pd:y>
+        <config>
+            <processName>/Common_Module/CommonLog.process</processName>
+        </config>
+        <pd:inputBindings>
+            <ns1:LogDetails>
+                <ns1:LogHeaders>
+                    <ns1:Correlation_Id>
+                        <xsl:value-of select="$correlation_id/root"/>
+                    </ns1:Correlation_Id>
+                    <ns1:Application_Name>
+                        <xsl:value-of select="'User_Regisration_Module'"/>
+                    </ns1:Application_Name>
+                    <ns1:Process_Name>
+                        <xsl:value-of select="'Delete_Profile'"/>
+                    </ns1:Process_Name>
+                    <ns1:Activity_Name>
+                        <xsl:value-of select="'JBDC_Update'"/>
+                    </ns1:Activity_Name>
+                    <ns1:LogType>
+                        <xsl:value-of select="'START'"/>
+                    </ns1:LogType>
+                    <ns1:Message_Type>
+                        <xsl:value-of select="'RequestLog'"/>
+                    </ns1:Message_Type>
+                    <ns1:Status>
+                        <xsl:value-of select="'Start'"/>
+                    </ns1:Status>
+                    <ns1:Timestamp>
+                        <xsl:value-of select="current-dateTime()"/>
+                    </ns1:Timestamp>
+                    <ns1:Payload>
+                        <xsl:value-of select="$Start/pfx:Get_User/pfx:Email"/>
+                    </ns1:Payload>
+                </ns1:LogHeaders>
+            </ns1:LogDetails>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Delete_Profile</pd:from>
+        <pd:to>EndLog</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Assign</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>string-length($Start/pfx:Get_User/pfx:Email)&gt;0  and CustomFuction:matchRegex($Start/pfx:Get_User/pfx:Email,'^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$')</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>StartLog</pd:from>
+        <pd:to>Delete_Profile</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>EndLog</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Generate Error</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>ErrorLog</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>ErrorLog</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>One Bend</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Assign</pd:from>
+        <pd:to>StartLog</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

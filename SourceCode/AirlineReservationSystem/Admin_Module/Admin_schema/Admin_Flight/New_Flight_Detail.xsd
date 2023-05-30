@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	 xmlns="http://www.tibco.com/schemas/Airline Reservation System/Admin_schema/Flight_Details.xsd"
+	 targetNamespace="http://www.tibco.com/schemas/Airline Reservation System/Admin_schema/Flight_Details.xsd"
+	 elementFormDefault="qualified"
+	 attributeFormDefault="unqualified">
+	<xs:element name="Flight_Details" type="Flight_DetailsType"/>
+	<xs:complexType name="Flight_DetailsType">
+		<xs:sequence>
+			<xs:element ref="Flights"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Flights" type="FlightsType"/>
+	<xs:complexType name="FlightsType">
+		<xs:sequence>
+			<xs:element ref="Airline" minOccurs="0"/>
+			<xs:element ref="Flight_number" minOccurs="0"/>
+			<xs:element ref="Departure" minOccurs="0"/>
+			<xs:element ref="Arrival" minOccurs="0"/>
+			<xs:element ref="Departure_Date" minOccurs="0"/>
+			<xs:element ref="Arrival_Date" minOccurs="0"/>
+			<xs:element ref="Departure_Time" minOccurs="0"/>
+			<xs:element ref="Arrival_Time" minOccurs="0"/>
+			<xs:element ref="Duration" minOccurs="0"/>
+			<xs:element ref="Price" minOccurs="0"/>
+			<xs:element ref="Status" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Airline" type="xs:string"/>
+	<xs:element name="Flight_number" type="xs:string"/>
+	<xs:element name="Departure" type="xs:string"/>
+	<xs:element name="Arrival" type="xs:string"/>
+	<xs:element name="Departure_Time" type="xs:string"/>
+	<xs:element name="Arrival_Time" type="xs:string"/>
+	<xs:element name="Duration" type="xs:string"/>
+	<xs:element name="Price" type="xs:string"/>
+	<xs:element name="Departure_Date" type="xs:string"/>
+	<xs:element name="Status" type="xs:string"/>
+	<xs:element name="Arrival_Date" type="xs:string"/>
+</xs:schema>

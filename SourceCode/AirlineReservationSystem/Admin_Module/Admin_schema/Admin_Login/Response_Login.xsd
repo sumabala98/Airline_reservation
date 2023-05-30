@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	 xmlns="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Schema.xsd2"
+	 targetNamespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Schema.xsd2"
+	 elementFormDefault="qualified"
+	 attributeFormDefault="unqualified">
+	<xs:element name="Response_Login" type="Response_LoginType"/>
+	<xs:complexType name="Response_LoginType">
+		<xs:sequence>
+			<xs:element ref="Message" minOccurs="0"/>
+			<xs:element ref="Res_code" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Message" type="xs:string"/>
+	<xs:element name="Res_code" type="xs:string"/>
+</xs:schema>

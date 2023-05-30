@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	 xmlns="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Airline/Schema.xsd"
+	 targetNamespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Airline/Schema.xsd"
+	 elementFormDefault="qualified"
+	 attributeFormDefault="unqualified">
+	<xs:element name="Root" type="RootType"/>
+	<xs:complexType name="RootType">
+		<xs:sequence>
+			<xs:element ref="Airline_Reservation" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Airline_Reservation" type="Airline_ReservationType"/>
+	<xs:complexType name="Airline_ReservationType">
+		<xs:sequence>
+			<xs:element ref="UserLogin" minOccurs="0"/>
+			<xs:element ref="User_Registration" minOccurs="0"/>
+			<xs:element ref="Flight_Details" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="UserLogin" type="xs:string"/>
+	<xs:element name="User_Registration" type="xs:string"/>
+	<xs:element name="Flight_Details" type="xs:string"/>
+</xs:schema>

@@ -1,0 +1,37 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<repository xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance" xmlns = "http://www.tibco.com/xmlns/repo/types/2002">
+	<globalVariables>
+		<globalVariable>
+			<name>Password_Invalid</name>
+			<value>'Invalid Password'</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1684991243315</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>Password_empty</name>
+			<value>'Password should not be empty'</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1685083486999</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>Username_Empty</name>
+			<value>'Username should not be empty'</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1684991243284</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>Username_Invalid</name>
+			<value>'Invalid username'</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1684991243378</modTime>
+		</globalVariable>
+	</globalVariables>
+</repository>

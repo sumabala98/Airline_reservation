@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	 xmlns="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Common_Logging/Schema.xsd"
+	 targetNamespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Common_Logging/Schema.xsd"
+	 elementFormDefault="qualified"
+	 attributeFormDefault="unqualified">
+	<xs:element name="LogDetails" type="LogDetailsType"/>
+	<xs:complexType name="LogDetailsType">
+		<xs:sequence>
+			<xs:element ref="LogHeaders" minOccurs="0"/>
+			<xs:element ref="ErrorDetails" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Correlation_Id" type="xs:string"/>
+	<xs:element name="Application_Name" type="xs:string"/>
+	<xs:element name="Process_Name" type="xs:string"/>
+	<xs:element name="Activity_Name" type="xs:string"/>
+	<xs:element name="LogType" type="xs:string"/>
+	<xs:element name="Message_Type" type="xs:string"/>
+	<xs:element name="Status" type="xs:string"/>
+	<xs:element name="Timestamp" type="xs:string"/>
+	<xs:element name="LogHeaders" type="LogHeadersType"/>
+	<xs:element name="ErrorDetails" type="ErrorDetailsType"/>
+	<xs:complexType name="LogHeadersType">
+		<xs:sequence>
+			<xs:element ref="Correlation_Id" minOccurs="0"/>
+			<xs:element ref="Application_Name" minOccurs="0"/>
+			<xs:element ref="Process_Name" minOccurs="0"/>
+			<xs:element ref="Activity_Name" minOccurs="0"/>
+			<xs:element ref="LogType" minOccurs="0"/>
+			<xs:element ref="Message_Type" minOccurs="0"/>
+			<xs:element ref="Status" minOccurs="0"/>
+			<xs:element ref="Timestamp" minOccurs="0"/>
+			<xs:element ref="Payload" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ErrorDetailsType">
+		<xs:sequence>
+			<xs:element ref="ErrorCode" minOccurs="0"/>
+			<xs:element ref="Error_Message" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Payload" type="xs:string"/>
+	<xs:element name="ErrorCode" type="xs:string"/>
+	<xs:element name="Error_Message" type="xs:string"/>
+</xs:schema>

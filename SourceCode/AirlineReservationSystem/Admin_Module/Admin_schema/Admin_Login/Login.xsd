@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	 xmlns="http://www.tibco.com/schemas/Airline Reservation System/Admin_schema.xsd"
+	 targetNamespace="http://www.tibco.com/schemas/Airline Reservation System/Admin_schema.xsd"
+	 elementFormDefault="qualified"
+	 attributeFormDefault="unqualified">
+	<xs:element name="Login" type="LoginType"/>
+	<xs:complexType name="LoginType">
+		<xs:sequence>
+			<xs:element ref="Admin_Id" minOccurs="0"/>
+			<xs:element ref="Admin_Password" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Admin_Id" type="xs:string"/>
+	<xs:element name="Admin_Password" type="xs:string"/>
+</xs:schema>

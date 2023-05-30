@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	 xmlns="http://www.tibco.com/schemas/Airline Reservation System/Schemas/User_Registration/Schema.xsd"
+	 targetNamespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/User_Registration/Schema.xsd"
+	 elementFormDefault="qualified"
+	 attributeFormDefault="unqualified">
+	<xs:element name="User_Registration" type="User_RegistrationType"/>
+	<xs:complexType name="User_RegistrationType">
+		<xs:sequence>
+			<xs:element ref="Firstname" minOccurs="0"/>
+			<xs:element ref="Lastname" minOccurs="0"/>
+			<xs:element ref="Email" minOccurs="0"/>
+			<xs:element ref="Phone_no" minOccurs="0"/>
+			<xs:element ref="State" minOccurs="0"/>
+			<xs:element ref="Country" minOccurs="0"/>
+			<xs:element ref="Pincode" minOccurs="0"/>
+			<xs:element ref="Username" minOccurs="0"/>
+			<xs:element ref="Password" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Firstname" type="xs:string"/>
+	<xs:element name="Lastname" type="xs:string"/>
+	<xs:element name="Email" type="xs:string"/>
+	<xs:element name="Country" type="xs:string"/>
+	<xs:element name="Pincode" type="xs:string"/>
+	<xs:element name="Phone_no" type="xs:string"/>
+	<xs:element name="State" type="xs:string"/>
+	<xs:element name="Username" type="xs:string"/>
+	<xs:element name="Password" type="xs:string"/>
+</xs:schema>

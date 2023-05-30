@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	 xmlns="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Flight_Reservation/Schema.xsd2"
+	 targetNamespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Flight_Reservation/Schema.xsd2"
+	 elementFormDefault="qualified"
+	 attributeFormDefault="unqualified">
+	<xs:element name="Registration_Response" type="RegistrationType"/>
+	<xs:complexType name="RegistrationType">
+		<xs:sequence>
+			<xs:element ref="Res_Code" minOccurs="0"/>
+			<xs:element ref="Message" minOccurs="0"/>
+			<xs:element ref="Data" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Res_Code" type="xs:string"/>
+	<xs:element name="Message" type="xs:string"/>
+	<xs:element name="Data" type="DataType"/>
+	<xs:complexType name="DataType">
+		<xs:sequence>
+			<xs:element ref="FirstName" minOccurs="0"/>
+			<xs:element ref="LastName" minOccurs="0"/>
+			<xs:element ref="Email" minOccurs="0"/>
+			<xs:element ref="PhoneNo" minOccurs="0"/>
+			<xs:element ref="State" minOccurs="0"/>
+			<xs:element ref="Country" minOccurs="0"/>
+			<xs:element ref="Pincode" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="FirstName" type="xs:string"/>
+	<xs:element name="LastName" type="xs:string"/>
+	<xs:element name="Email" type="xs:string"/>
+	<xs:element name="PhoneNo" type="xs:string"/>
+	<xs:element name="State" type="xs:string"/>
+	<xs:element name="Country" type="xs:string"/>
+	<xs:element name="Pincode" type="xs:string"/>
+</xs:schema>

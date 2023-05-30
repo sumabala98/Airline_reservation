@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Repository:repository xmlns:Repository="http://www.tibco.com/xmlns/repo/types/2002">
+    <name name="LibraryBuilder">
+        <version>4</version>
+        <author>admin</author>
+        <fileLocation>C:\Suma\TIBCOBW5_workspace\Shared Module\CommonModule_ARS.projlib</fileLocation>
+        <resources>/Connections/Login/JDBC Connection.sharedjdbc,/Connections/Login/Login_HTTPConnection.sharedhttp,/Connections/Registration/HTTP Connection_Registration.sharedhttp,/JavaCode/JavaCustomFunction.javaxpath,/Schemas/Flight_Cancellation/Cancellation.xsd,/Schemas/Flight_Search/Flight_Detail_Response.xsd,/Schemas/Flight_Search/Flight_Reservation.xsd,/Schemas/Login/Forgot_Password.xsd,/Schemas/Login/Login.xsd,/Schemas/Login/Response_Login.xsd,/Schemas/Payload.xsd,/Schemas/User_Registration/Get_User.xsd,/Schemas/User_Registration/Registration_Response.xsd,/Schemas/User_Registration/User_Registration.xsd</resources>
+    </name>
+</Repository:repository>

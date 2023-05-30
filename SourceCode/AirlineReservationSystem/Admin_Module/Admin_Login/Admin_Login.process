@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:CustomFuction="java://java_uuidcode.java_uuidcode" xmlns:ns12="http://www.tibco.com/pe/GenerateErrorActivity/InputSchema" xmlns:ns13="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Common_Logging/Schema.xsd" xmlns:pfx="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Schema.xsd" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns2="http://www.tibco.com/pe/DeployedVarsType" xmlns:ns1="http://www.tibco.com/schemas/Airline Reservation System/Admin_schema.xsd" xmlns:ns3="http://www.tibco.com/pe/EngineTypes" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:pfx5="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Common_Logging/Schema.xsd3" xmlns:pfx4="http://www.tibco.com/ns/no_namespace_schema_location/Admin_Module/Admin_schema/Login/Login.xsd" xmlns:pfx3="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Schema.xsd3" xmlns:pfx2="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Schema.xsd2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <xsd:import namespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Schema.xsd2" schemaLocation="/Schemas/Login/Response_Login.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Schema.xsd3" schemaLocation="/Schemas/Payload.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Schema.xsd" schemaLocation="/Schemas/Login/Login.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/Airline Reservation System/Admin_schema.xsd" schemaLocation="/Admin_Module/Admin_schema/Admin_Login/Login.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Common_Logging/Schema.xsd3" schemaLocation="/Schemas/Common_Logging/Exception.xsd"/>
+    <pd:name>Admin_Module/Admin_Login/Admin_Login.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType ref="ns1:Login"/>
+    <pd:startX>77</pd:startX>
+    <pd:startY>94</pd:startY>
+    <pd:returnBindings>
+        <xsl:choose>
+            <xsl:when test="exists($LoginDetails/resultSet/Record/ADMIN_ID)">
+                <pfx2:Message>
+                    <xsl:value-of select="'Admin Logged in'"/>
+                </pfx2:Message>
+            </xsl:when>
+            <xsl:otherwise>
+                <pfx2:Message>
+                    <xsl:value-of select="'Invalid Admin_id or password'"/>
+                </pfx2:Message>
+            </xsl:otherwise>
+        </xsl:choose>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType ref="pfx2:Message"/>
+    <pd:endX>646</pd:endX>
+    <pd:endY>93</pd:endY>
+    <pd:errorSchemas>
+        <Schema ref="pfx5:Root"/>
+    </pd:errorSchemas>
+    <pd:processVariables>
+        <Variable>
+            <xsd:element name="root" type="xsd:string"/>
+        </Variable>
+    </pd:processVariables>
+    <pd:targetNamespace>http://xmlns.example.com/1679981862078</pd:targetNamespace>
+    <pd:activity name="Assign">
+        <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
+        <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
+        <pd:x>193</pd:x>
+        <pd:y>93</pd:y>
+        <config>
+            <variableName>Variable</variableName>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <xsl:value-of xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="CustomFuction:getUUID()"/>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>422</pd:x>
+        <pd:y>212</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="EndLog">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>552</pd:x>
+        <pd:y>93</pd:y>
+        <config>
+            <processName>/Common_Module/CommonLog.process</processName>
+        </config>
+        <pd:inputBindings>
+            <ns13:LogDetails>
+                <ns13:LogHeaders>
+                    <ns13:Correlation_Id>
+                        <xsl:value-of select="$Variable/root"/>
+                    </ns13:Correlation_Id>
+                    <ns13:Application_Name>
+                        <xsl:value-of select="'Admin_Module'"/>
+                    </ns13:Application_Name>
+                    <ns13:Process_Name>
+                        <xsl:value-of select="'Admin_Login'"/>
+                    </ns13:Process_Name>
+                    <ns13:Activity_Name>
+                        <xsl:value-of select="'JDBC Query'"/>
+                    </ns13:Activity_Name>
+                    <ns13:LogType>
+                        <xsl:value-of select="'END'"/>
+                    </ns13:LogType>
+                    <ns13:Message_Type>
+                        <xsl:value-of select="'ResponseLog'"/>
+                    </ns13:Message_Type>
+                    <ns13:Status>
+                        <xsl:value-of select="'End'"/>
+                    </ns13:Status>
+                    <ns13:Timestamp>
+                        <xsl:value-of select="current-dateTime()"/>
+                    </ns13:Timestamp>
+                </ns13:LogHeaders>
+            </ns13:LogDetails>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="ErrorLog">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>560</pd:x>
+        <pd:y>212</pd:y>
+        <config>
+            <processName>/Common_Module/CommonLog.process</processName>
+        </config>
+        <pd:inputBindings>
+            <ns13:LogDetails>
+                <ns13:LogHeaders>
+                    <ns13:Correlation_Id>
+                        <xsl:value-of select="$Variable/root"/>
+                    </ns13:Correlation_Id>
+                    <ns13:Application_Name>
+                        <xsl:value-of select="'Admin_Module'"/>
+                    </ns13:Application_Name>
+                    <ns13:Process_Name>
+                        <xsl:value-of select="'Admin_Login'"/>
+                    </ns13:Process_Name>
+                    <ns13:Activity_Name>
+                        <xsl:value-of select="'catch All'"/>
+                    </ns13:Activity_Name>
+                    <ns13:LogType>
+                        <xsl:value-of select="'Error'"/>
+                    </ns13:LogType>
+                    <ns13:Message_Type>
+                        <xsl:value-of select="'Error Message'"/>
+                    </ns13:Message_Type>
+                    <ns13:Status>
+                        <xsl:value-of select="'Error'"/>
+                    </ns13:Status>
+                    <ns13:Timestamp>
+                        <xsl:value-of select="current-dateTime()"/>
+                    </ns13:Timestamp>
+                </ns13:LogHeaders>
+                <ns13:ErrorDetails>
+                    <ns13:ErrorCode>
+                        <xsl:value-of select="$_error/ns3:ErrorReport/MsgCode"/>
+                    </ns13:ErrorCode>
+                    <ns13:Error_Message>
+                        <xsl:value-of select="$Catch/exceptiondata/*"/>
+                    </ns13:Error_Message>
+                </ns13:ErrorDetails>
+            </ns13:LogDetails>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Generate Error">
+        <pd:type>com.tibco.pe.core.GenerateErrorActivity</pd:type>
+        <pd:resourceType>ae.activities.throw</pd:resourceType>
+        <pd:x>83</pd:x>
+        <pd:y>209</pd:y>
+        <config>
+            <faultName>Schema</faultName>
+        </config>
+        <pd:inputBindings>
+            <ns12:ActivityInput>
+                <xsl:choose xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+                    <xsl:when test="string-length($Start/ns1:Login/ns1:Admin_Id)=0">
+                        <data>
+                            <pfx5:Root>
+                                <pfx5:Message>
+                                    <xsl:value-of select="'Admin_Id should not be empty'"/>
+                                </pfx5:Message>
+                                <pfx5:Message_Code>
+                                    <xsl:value-of select="'100'"/>
+                                </pfx5:Message_Code>
+                            </pfx5:Root>
+                        </data>
+                    </xsl:when>
+                    <xsl:when test="not(CustomFuction:matchRegex($Start/ns1:Login/ns1:Admin_Id,'[A-Za-z][A-Za-z0-9_]{4,10}'))">
+                        <data>
+                            <pfx5:Root>
+                                <pfx5:Message>
+                                    <xsl:value-of select="'Admin _ID invalid'"/>
+                                </pfx5:Message>
+                                <pfx5:Message_Code>
+                                    <xsl:value-of select="'101'"/>
+                                </pfx5:Message_Code>
+                            </pfx5:Root>
+                        </data>
+                    </xsl:when>
+                    <xsl:when test="string-length($Start/ns1:Login/ns1:Admin_Password)=0">
+                        <data>
+                            <pfx5:Root>
+                                <pfx5:Message>
+                                    <xsl:value-of select="'Password should not be empty'"/>
+                                </pfx5:Message>
+                                <pfx5:Message_Code>
+                                    <xsl:value-of select="'102'"/>
+                                </pfx5:Message_Code>
+                            </pfx5:Root>
+                        </data>
+                    </xsl:when>
+                    <xsl:when test="not(CustomFuction:matchRegex($Start/ns1:Login/ns1:Admin_Password,'[A-Za-z0-9]{4,8}'))">
+                        <data>
+                            <pfx5:Root>
+                                <pfx5:Message>
+                                    <xsl:value-of select="'Invalid Admin Password '"/>
+                                </pfx5:Message>
+                                <pfx5:Message_Code>
+                                    <xsl:value-of select="'103'"/>
+                                </pfx5:Message_Code>
+                            </pfx5:Root>
+                        </data>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <data>
+                            <pfx5:Root>
+                                <pfx5:Message>
+                                    <xsl:value-of select="'Input invalid'"/>
+                                </pfx5:Message>
+                                <pfx5:Message_Code>
+                                    <xsl:value-of select="'201'"/>
+                                </pfx5:Message_Code>
+                            </pfx5:Root>
+                        </data>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </ns12:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="LoginDetails">
+        <pd:type>com.tibco.plugin.jdbc.JDBCQueryActivity</pd:type>
+        <pd:resourceType>ae.activities.JDBCQueryActivity</pd:resourceType>
+        <pd:x>417</pd:x>
+        <pd:y>93</pd:y>
+        <config>
+            <timeout>10</timeout>
+            <commit>false</commit>
+            <maxRows>100</maxRows>
+            <emptyStrAsNil>false</emptyStrAsNil>
+            <jdbcSharedConfig>/Connections/JDBC Connection.sharedjdbc</jdbcSharedConfig>
+            <statement>Select  ADMIN_ID ,  ADMIN_PASSWORD 
+from  AIRLINE_ADMIN_DEATILS
+where  ADMIN_ID=? and ADMIN_PASSWORD=?</statement>
+            <Prepared_Param_DataType>
+                <parameter>
+                    <parameterName>Admin_ID</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>Admin_PASSWORD</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+            </Prepared_Param_DataType>
+            <QueryOutputCachedSchemaColumns>ADMIN_ID</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>VARCHAR2</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>ADMIN_PASSWORD</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>VARCHAR2</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <oraObjects/>
+            <oraTables/>
+        </config>
+        <pd:inputBindings>
+            <jdbcQueryActivityInput>
+                <Admin_ID>
+                    <xsl:choose>
+                        <xsl:when test="exists($Start/ns1:Login/ns1:Admin_Id)">
+                            <xsl:value-of select="$Start/ns1:Login/ns1:Admin_Id"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </Admin_ID>
+                <Admin_PASSWORD>
+                    <xsl:choose>
+                        <xsl:when test="exists($Start/ns1:Login/ns1:Admin_Password)">
+                            <xsl:value-of select="$Start/ns1:Login/ns1:Admin_Password"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </Admin_PASSWORD>
+            </jdbcQueryActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="StartLog">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>300</pd:x>
+        <pd:y>93</pd:y>
+        <config>
+            <processName>/Common_Module/CommonLog.process</processName>
+        </config>
+        <pd:inputBindings>
+            <ns13:LogDetails>
+                <ns13:LogHeaders>
+                    <ns13:Correlation_Id>
+                        <xsl:value-of select="$Variable/root"/>
+                    </ns13:Correlation_Id>
+                    <ns13:Application_Name>
+                        <xsl:value-of select="'Admin_Module'"/>
+                    </ns13:Application_Name>
+                    <ns13:Process_Name>
+                        <xsl:value-of select="'Admin_Login'"/>
+                    </ns13:Process_Name>
+                    <ns13:Activity_Name>
+                        <xsl:value-of select="'Login Details'"/>
+                    </ns13:Activity_Name>
+                    <ns13:LogType>
+                        <xsl:value-of select="'START'"/>
+                    </ns13:LogType>
+                    <ns13:Message_Type>
+                        <xsl:value-of select="'RequestLog'"/>
+                    </ns13:Message_Type>
+                    <ns13:Status>
+                        <xsl:value-of select="'Start'"/>
+                    </ns13:Status>
+                    <ns13:Timestamp>
+                        <xsl:value-of select="current-dateTime()"/>
+                    </ns13:Timestamp>
+                    <ns13:Payload>
+                        <xsl:value-of select="concat($Start/ns1:Login/ns1:Admin_Id,$Start/ns1:Login/ns1:Admin_Password)"/>
+                    </ns13:Payload>
+                </ns13:LogHeaders>
+            </ns13:LogDetails>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>LoginDetails</pd:from>
+        <pd:to>EndLog</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Assign</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>string-length($Start/ns1:Login/ns1:Admin_Id)!=0 and
+CustomFuction:matchRegex($Start/ns1:Login/ns1:Admin_Id,'[A-Za-z][A-Za-z0-9_]{4,10}') and
+string-length($Start/ns1:Login/ns1:Admin_Password)!=0 and 
+CustomFuction:matchRegex($Start/ns1:Login/ns1:Admin_Password,'[A-Za-z0-9]{4,8}')</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Assign</pd:from>
+        <pd:to>StartLog</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>StartLog</pd:from>
+        <pd:to>LoginDetails</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>EndLog</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>ErrorLog</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>ErrorLog</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>One Bend</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Generate Error</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

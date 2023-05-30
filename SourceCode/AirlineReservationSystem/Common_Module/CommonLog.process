@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Common_Logging/Schema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Common_Logging/Schema.xsd" schemaLocation="/Schemas/Common_Logging/Common_Log.xsd"/>
+    <pd:name>Common_Module/CommonLog.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType ref="pfx:LogDetails"/>
+    <pd:startX>149</pd:startX>
+    <pd:startY>74</pd:startY>
+    <pd:returnBindings/>
+    <pd:endName>End</pd:endName>
+    <pd:endX>445</pd:endX>
+    <pd:endY>75</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1681893783200</pd:targetNamespace>
+    <pd:activity name="JDBC Update">
+        <pd:type>com.tibco.plugin.jdbc.JDBCUpdateActivity</pd:type>
+        <pd:resourceType>ae.activities.JDBCUpdateActivity</pd:resourceType>
+        <pd:x>299</pd:x>
+        <pd:y>76</pd:y>
+        <config>
+            <timeout>10</timeout>
+            <commit>false</commit>
+            <emptyStrAsNil>false</emptyStrAsNil>
+            <jdbcSharedConfig>/Connections/JDBC Connection.sharedjdbc</jdbcSharedConfig>
+            <statement> INSERT INTO SYSTEM.AIRLINE_LOGEXCEPTION (CORRELATION_ID,APPLICATION_NAME, PROCESS_NAME,ACTIVITY_NAME,
+  LOG_TYPE,MESSAGE_TYPE,STATUS,TIMESTAMP,PAYLOAD,ERROR_CODE,ERROR_MESSAGE)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)</statement>
+            <Prepared_Param_DataType>
+                <parameter>
+                    <parameterName>Correlation_Id</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>Application_Name</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>Process_Name</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>Activity_Name</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>Log_Type</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>Message_Type</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>Status</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>TimeStamp</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>Payload</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>Error_Code</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>Error_message</parameterName>
+                    <dataType>CLOB</dataType>
+                </parameter>
+            </Prepared_Param_DataType>
+        </config>
+        <pd:inputBindings>
+            <xsl:for-each select="$Start/pfx:LogDetails/pfx:LogHeaders">
+                <jdbcUpdateActivityInput>
+                    <Correlation_Id>
+                        <xsl:value-of select="pfx:Correlation_Id"/>
+                    </Correlation_Id>
+                    <Application_Name>
+                        <xsl:value-of select="pfx:Application_Name"/>
+                    </Application_Name>
+                    <Process_Name>
+                        <xsl:value-of select="pfx:Process_Name"/>
+                    </Process_Name>
+                    <Activity_Name>
+                        <xsl:value-of select="pfx:Activity_Name"/>
+                    </Activity_Name>
+                    <Log_Type>
+                        <xsl:choose>
+                            <xsl:when test="exists(pfx:LogType)">
+                                <xsl:value-of select="pfx:LogType"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </Log_Type>
+                    <Message_Type>
+                        <xsl:value-of select="pfx:Message_Type"/>
+                    </Message_Type>
+                    <Status>
+                        <xsl:value-of select="pfx:Status"/>
+                    </Status>
+                    <TimeStamp>
+                        <xsl:value-of select="pfx:Timestamp"/>
+                    </TimeStamp>
+                    <Payload>
+                        <xsl:value-of select="pfx:Payload"/>
+                    </Payload>
+                    <Error_Code>
+                        <xsl:choose>
+                            <xsl:when test="exists(../pfx:ErrorDetails/pfx:ErrorCode)">
+                                <xsl:value-of select="../pfx:ErrorDetails/pfx:ErrorCode"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </Error_Code>
+                    <Error_message>
+                        <xsl:choose>
+                            <xsl:when test="exists(../pfx:ErrorDetails/pfx:Error_Message)">
+                                <xsl:value-of select="../pfx:ErrorDetails/pfx:Error_Message"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </Error_message>
+                </jdbcUpdateActivityInput>
+            </xsl:for-each>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>JDBC Update</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>JDBC Update</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

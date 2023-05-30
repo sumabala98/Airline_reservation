@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	 xmlns="http://www.tibco.com/schemas/Airline Reservation System/Schemas/User_Registration/Schema.xsd2"
+	 targetNamespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/User_Registration/Schema.xsd2"
+	 elementFormDefault="qualified"
+	 attributeFormDefault="unqualified">
+	<xs:element name="Users" type="UsersType"/>
+	<xs:complexType name="UsersType">
+		<xs:sequence>
+			<xs:element ref="CreateUser" minOccurs="0"/>
+			<xs:element ref="UserDetails" minOccurs="0"/>
+			<xs:element ref="DeleteUser" minOccurs="0"/>
+			<xs:element ref="Update_User_Details" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="CreateUser" type="xs:string"/>
+	<xs:element name="UserDetails" type="xs:string"/>
+	<xs:element name="DeleteUser" type="xs:string"/>
+	<xs:element name="Update_User_Details" type="xs:string"/>
+</xs:schema>

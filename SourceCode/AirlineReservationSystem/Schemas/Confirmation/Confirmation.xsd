@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	 xmlns="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Confirmation/Schema.xsd"
+	 targetNamespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Confirmation/Schema.xsd"
+	 elementFormDefault="qualified"
+	 attributeFormDefault="unqualified">
+	<xs:element name="Booking" type="BookingType"/>
+	<xs:complexType name="BookingType">
+		<xs:sequence>
+			<xs:element ref="Confirmation" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Confirmation" type="ConfirmationTye"/>
+	<xs:complexType name="ConfirmationTye">
+		<xs:sequence>
+			<xs:element ref="Airline" minOccurs="0"/>
+			<xs:element ref="Username" minOccurs="0"/>
+			<xs:element ref="From" minOccurs="0"/>
+			<xs:element ref="To" minOccurs="0"/>
+			<xs:element ref="Date" minOccurs="0"/>
+			<xs:element ref="Seat" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Airline" type="xs:string"/>
+	<xs:element name="Username" type="xs:string"/>
+	<xs:element name="From" type="xs:string"/>
+	<xs:element name="To" type="xs:string"/>
+	<xs:element name="Date" type="xs:string"/>
+	<xs:element name="Seat" type="xs:string"/>
+</xs:schema>

@@ -1,0 +1,18 @@
+<project name="AirlineReservationSystem" default="deploy" basedir=".">
+
+    <!-- Define properties -->
+    <property name="Appmanage" value="C:/tibco_BW5/tra/5.7/bin/AppManage.exe" />
+    <property name="build.dir" value="${basedir}/AirlineReservationSystem/Deployble" />
+    <property name="app.name" value="AirlineReservationSystem" />
+<property name="project.bw.application" value="${basedir}/AirlineReservationSystem" />
+    <!-- Define targets -->
+	
+   
+
+    <target name="deploy" >
+        <exec executable="${Appmanage}">
+            <arg line="-deploy --propFile C:/tibco_BW5/tra/5.7/bin/AppManage.tra -app ${app.name} -ear ${build.dir}/EAR/ArlineReservation.ear -deployconfig ${build.dir}/Config/Airline.xml -user admin -pw admin -domain admin" />
+        </exec>
+    </target>
+
+</project>

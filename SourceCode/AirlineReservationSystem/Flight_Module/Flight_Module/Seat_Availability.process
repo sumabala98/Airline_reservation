@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:ns2="http://www.tibco.com/pe/EngineTypes" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns1="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Common_Logging/Schema.xsd" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:CustomFuction="java://java_uuidcode.java_uuidcode" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:pfx3="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Common_Logging/Schema.xsd3" xmlns:pfx2="http://www.tibco.com/pe/GenerateErrorActivity/InputSchema" xmlns:pfx="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Schema.xsd3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <xsd:import namespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Schema.xsd3" schemaLocation="/Schemas/Payload.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Common_Logging/Schema.xsd3" schemaLocation="/Schemas/Common_Logging/Exception.xsd"/>
+    <pd:name>Flight_Module/Flight_Module/Seat_Availability.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType ref="pfx:root"/>
+    <pd:startX>78</pd:startX>
+    <pd:startY>77</pd:startY>
+    <pd:returnBindings>
+        <pfx:root>
+            <xsl:choose>
+                <xsl:when test="contains($Check_availability/resultSet/Record[1]/AVAILABLE_SEATS,'0')">
+                    <pfx:Payload>
+                        <xsl:value-of select="'Seat Unavailable'"/>
+                    </pfx:Payload>
+                </xsl:when>
+                <xsl:when test="exists($Check_availability/resultSet/Record) and count($Check_availability/resultSet/Record)>0">
+                    <pfx:Payload>
+                        <xsl:value-of select="'seat booked'"/>
+                    </pfx:Payload>
+                </xsl:when>
+                <xsl:when test="contains($Check_availability/resultSet/Record[1]/AVAILABLE_SEATS,'0')">
+                    <pfx:Payload>
+                        <xsl:value-of select="'seat Anvailable'"/>
+                    </pfx:Payload>
+                </xsl:when>
+                <xsl:when test="contains($_error_Generate-Error/pfx3:Root/pfx3:Message_Code,'100') or contains($_error_Generate-Error/pfx3:Root/pfx3:Message_Code,'101')">
+                    <pfx:Payload>
+                        <xsl:value-of select="$_error_Generate-Error/pfx3:Root/pfx3:Message"/>
+                    </pfx:Payload>
+                </xsl:when>
+                <xsl:when test="exists($_error/ns2:ErrorReport)">
+                    <pfx:Payload>
+                        <xsl:value-of select="$_error/ns2:ErrorReport/Msg"/>
+                    </pfx:Payload>
+                </xsl:when>
+                <xsl:otherwise>
+                    <pfx:Payload>
+                        <xsl:value-of select="'Flight Number doesnot exist'"/>
+                    </pfx:Payload>
+                </xsl:otherwise>
+            </xsl:choose>
+        </pfx:root>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType ref="pfx:root"/>
+    <pd:endX>880</pd:endX>
+    <pd:endY>78</pd:endY>
+    <pd:errorSchemas>
+        <Schema0 ref="pfx3:Root"/>
+    </pd:errorSchemas>
+    <pd:processVariables>
+        <CorrelationId>
+            <xsd:element name="root" type="xsd:string"/>
+        </CorrelationId>
+    </pd:processVariables>
+    <pd:targetNamespace>http://xmlns.example.com/1681893660300</pd:targetNamespace>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>1111</pd:x>
+        <pd:y>76</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>false</catchAll>
+            <fault>localname=Root namespace=http://www.tibco.com/schemas/Airline Reservation System/Schemas/Common_Logging/Schema.xsd3</fault>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Catch_All">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>879</pd:x>
+        <pd:y>273</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Catch_All_ErrorLog">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>881</pd:x>
+        <pd:y>170</pd:y>
+        <config>
+            <processName>/Common_Module/CommonLog.process</processName>
+        </config>
+        <pd:inputBindings>
+            <ns1:LogDetails>
+                <ns1:LogHeaders>
+                    <ns1:Correlation_Id>
+                        <xsl:value-of select="$CorrelationId/root"/>
+                    </ns1:Correlation_Id>
+                    <ns1:Application_Name>
+                        <xsl:value-of select="'Flight_Module'"/>
+                    </ns1:Application_Name>
+                    <ns1:Process_Name>
+                        <xsl:value-of select="'SeatAvailability'"/>
+                    </ns1:Process_Name>
+                    <ns1:Activity_Name>
+                        <xsl:value-of select="'CatchAll'"/>
+                    </ns1:Activity_Name>
+                    <ns1:LogType>
+                        <xsl:value-of select="'ERROR'"/>
+                    </ns1:LogType>
+                    <ns1:Message_Type>
+                        <xsl:value-of select="'ErrorLog'"/>
+                    </ns1:Message_Type>
+                    <ns1:Status>
+                        <xsl:value-of select="'ERROR'"/>
+                    </ns1:Status>
+                    <ns1:Timestamp>
+                        <xsl:value-of select="current-dateTime()"/>
+                    </ns1:Timestamp>
+                    <ns1:Payload>
+                        <xsl:value-of select="$Parse-Seat-Availibility/ns:ActivityOutputClass/Check_SeatAvailability/FLIGHTNUMBER"/>
+                    </ns1:Payload>
+                </ns1:LogHeaders>
+            </ns1:LogDetails>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Check_availability">
+        <pd:type>com.tibco.plugin.jdbc.JDBCQueryActivity</pd:type>
+        <pd:resourceType>ae.activities.JDBCQueryActivity</pd:resourceType>
+        <pd:x>591</pd:x>
+        <pd:y>78</pd:y>
+        <config>
+            <timeout>10</timeout>
+            <commit>false</commit>
+            <maxRows>100</maxRows>
+            <emptyStrAsNil>false</emptyStrAsNil>
+            <statement>SELECT  FLIGHTNUMBER,DEPARTUREDATE,SEAT_CLASS,AVAILABLE_SEATS,BOOKED_SEATS,TOTALSEATS
+FROM AIRLINE_SEAT_AVAILABILITY
+WHERE  FLIGHTNUMBER=? and SEAT_CLASS=?</statement>
+            <jdbcSharedConfig>/Connections/JDBC Connection.sharedjdbc</jdbcSharedConfig>
+            <Prepared_Param_DataType>
+                <parameter>
+                    <parameterName>FLIGHTNUMBER</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>SEAT_CLASS</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+            </Prepared_Param_DataType>
+            <QueryOutputCachedSchemaColumns>FLIGHTNUMBER</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>VARCHAR2</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>DEPARTUREDATE</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>93</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>DATE</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>SEAT_CLASS</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>VARCHAR2</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>AVAILABLE_SEATS</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>VARCHAR2</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>BOOKED_SEATS</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>VARCHAR2</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>TOTALSEATS</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>VARCHAR2</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <oraObjects/>
+            <oraTables/>
+        </config>
+        <pd:inputBindings>
+            <jdbcQueryActivityInput>
+                <FLIGHTNUMBER>
+                    <xsl:choose>
+                        <xsl:when test="exists($Parse-Seat-Availibility/ns:ActivityOutputClass/Check_SeatAvailability/FLIGHTNUMBER)">
+                            <xsl:value-of select="$Parse-Seat-Availibility/ns:ActivityOutputClass/Check_SeatAvailability/FLIGHTNUMBER"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </FLIGHTNUMBER>
+                <SEAT_CLASS>
+                    <xsl:choose>
+                        <xsl:when test="exists($Parse-Seat-Availibility/ns:ActivityOutputClass/Check_SeatAvailability/SEAT_CLASS)">
+                            <xsl:value-of select="$Parse-Seat-Availibility/ns:ActivityOutputClass/Check_SeatAvailability/SEAT_CLASS"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </SEAT_CLASS>
+            </jdbcQueryActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="EndLog">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>753</pd:x>
+        <pd:y>78</pd:y>
+        <config>
+            <processName>/Common_Module/CommonLog.process</processName>
+        </config>
+        <pd:inputBindings>
+            <ns1:LogDetails>
+                <ns1:LogHeaders>
+                    <ns1:Correlation_Id>
+                        <xsl:value-of select="$CorrelationId/root"/>
+                    </ns1:Correlation_Id>
+                    <ns1:Application_Name>
+                        <xsl:value-of select="'Flight_Module'"/>
+                    </ns1:Application_Name>
+                    <ns1:Process_Name>
+                        <xsl:value-of select="'SeatAvailability'"/>
+                    </ns1:Process_Name>
+                    <ns1:Activity_Name>
+                        <xsl:value-of select="'ParseJson'"/>
+                    </ns1:Activity_Name>
+                    <ns1:LogType>
+                        <xsl:value-of select="'INFO'"/>
+                    </ns1:LogType>
+                    <ns1:Message_Type>
+                        <xsl:value-of select="'EndLog'"/>
+                    </ns1:Message_Type>
+                    <ns1:Status>
+                        <xsl:value-of select="'END'"/>
+                    </ns1:Status>
+                    <ns1:Timestamp>
+                        <xsl:value-of select="current-dateTime()"/>
+                    </ns1:Timestamp>
+                    <ns1:Payload>
+                        <xsl:value-of select="$Parse-Seat-Availibility/ns:ActivityOutputClass/Check_SeatAvailability/FLIGHTNUMBER"/>
+                    </ns1:Payload>
+                </ns1:LogHeaders>
+            </ns1:LogDetails>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="ErrorLog">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>991</pd:x>
+        <pd:y>78</pd:y>
+        <config>
+            <processName>/Common_Module/CommonLog.process</processName>
+        </config>
+        <pd:inputBindings>
+            <ns1:LogDetails>
+                <ns1:LogHeaders>
+                    <ns1:Correlation_Id>
+                        <xsl:value-of select="$CorrelationId/root"/>
+                    </ns1:Correlation_Id>
+                    <ns1:Application_Name>
+                        <xsl:value-of select="'Flight_Module'"/>
+                    </ns1:Application_Name>
+                    <ns1:Process_Name>
+                        <xsl:value-of select="'SeatAvailability'"/>
+                    </ns1:Process_Name>
+                    <ns1:Activity_Name>
+                        <xsl:value-of select="'CatchBlock'"/>
+                    </ns1:Activity_Name>
+                    <ns1:LogType>
+                        <xsl:value-of select="'ERROR'"/>
+                    </ns1:LogType>
+                    <ns1:Message_Type>
+                        <xsl:value-of select="'ErrorLog'"/>
+                    </ns1:Message_Type>
+                    <ns1:Status>
+                        <xsl:value-of select="'ERROR'"/>
+                    </ns1:Status>
+                    <ns1:Timestamp>
+                        <xsl:value-of select="current-dateTime()"/>
+                    </ns1:Timestamp>
+                    <ns1:Payload>
+                        <xsl:value-of select="$Parse-Seat-Availibility/ns:ActivityOutputClass/Check_SeatAvailability/FLIGHTNUMBER"/>
+                    </ns1:Payload>
+                </ns1:LogHeaders>
+                <ns1:ErrorDetails>
+                    <xsl:if test="$_error_Generate-Error/pfx3:Root/pfx3:Message_Code">
+                        <ns1:ErrorCode>
+                            <xsl:value-of select="$_error_Generate-Error/pfx3:Root/pfx3:Message_Code"/>
+                        </ns1:ErrorCode>
+                    </xsl:if>
+                    <xsl:if test="$_error_Generate-Error/pfx3:Root/pfx3:Message">
+                        <ns1:Error_Message>
+                            <xsl:value-of select="$_error_Generate-Error/pfx3:Root/pfx3:Message"/>
+                        </ns1:Error_Message>
+                    </xsl:if>
+                </ns1:ErrorDetails>
+            </ns1:LogDetails>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Generate Error">
+        <pd:type>com.tibco.pe.core.GenerateErrorActivity</pd:type>
+        <pd:resourceType>ae.activities.throw</pd:resourceType>
+        <pd:x>427</pd:x>
+        <pd:y>212</pd:y>
+        <config>
+            <faultName>Schema0</faultName>
+        </config>
+        <pd:inputBindings>
+            <pfx2:ActivityInput>
+                <data>
+                    <xsl:choose>
+                        <xsl:when test="string-length($Parse-Seat-Availibility/ns:ActivityOutputClass/Check_SeatAvailability/FLIGHTNUMBER)=0">
+                            <pfx3:Root>
+                                <pfx3:Message>
+                                    <xsl:value-of select="'Flight Number should not be empty'"/>
+                                </pfx3:Message>
+                                <pfx3:Message_Code>
+                                    <xsl:value-of select="'100'"/>
+                                </pfx3:Message_Code>
+                            </pfx3:Root>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <pfx3:Root>
+                                <pfx3:Message>
+                                    <xsl:value-of select="'Invalid Flight Number'"/>
+                                </pfx3:Message>
+                                <pfx3:Message_Code>
+                                    <xsl:value-of select="'101'"/>
+                                </pfx3:Message_Code>
+                            </pfx3:Root>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </data>
+            </pfx2:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Parse-Seat-Availibility">
+        <pd:type>com.tibco.plugin.json.activities.JSONParserActivity</pd:type>
+        <pd:resourceType>ae.activities.JSONParserActivity</pd:resourceType>
+        <pd:x>427</pd:x>
+        <pd:y>76</pd:y>
+        <config>
+            <SchemaType>xsdType</SchemaType>
+            <BadgerfishCheck>false</BadgerfishCheck>
+            <ActivityOutputEditor>
+                <xsd:element name="Check_SeatAvailability">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="SEAT_CLASS" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="FLIGHTNUMBER" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </ActivityOutputEditor>
+        </config>
+        <pd:inputBindings>
+            <ns:ActivityInputClass>
+                <jsonString>
+                    <xsl:value-of select="$Start/pfx:root/pfx:Payload"/>
+                </jsonString>
+            </ns:ActivityInputClass>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Seat_Allocate">
+        <pd:type>com.tibco.plugin.jdbc.JDBCUpdateActivity</pd:type>
+        <pd:resourceType>ae.activities.JDBCUpdateActivity</pd:resourceType>
+        <pd:x>592</pd:x>
+        <pd:y>206</pd:y>
+        <config>
+            <timeout>10</timeout>
+            <commit>false</commit>
+            <emptyStrAsNil>false</emptyStrAsNil>
+            <jdbcSharedConfig>/Connections/JDBC Connection.sharedjdbc</jdbcSharedConfig>
+            <statement>UPDATE AIRLINE_SEAT_AVAILABILITY
+SET AVAILABLE_SEATS = AVAILABLE_SEATS- 1, BOOKED_SEATS =BOOKED_SEATS+ 1 
+WHERE FLIGHTNUMBER =? and SEAT_CLASS=?
+</statement>
+            <Prepared_Param_DataType>
+                <parameter>
+                    <parameterName>FLIGHTNUMBER</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>SEAT_CLASS</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+            </Prepared_Param_DataType>
+        </config>
+        <pd:inputBindings>
+            <jdbcUpdateActivityInput>
+                <FLIGHTNUMBER>
+                    <xsl:choose>
+                        <xsl:when test="exists($Check_availability/resultSet/Record[1]/FLIGHTNUMBER)">
+                            <xsl:value-of select="$Check_availability/resultSet/Record[1]/FLIGHTNUMBER"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </FLIGHTNUMBER>
+                <SEAT_CLASS>
+                    <xsl:choose>
+                        <xsl:when test="exists($Check_availability/resultSet/Record[1]/SEAT_CLASS)">
+                            <xsl:value-of select="$Check_availability/resultSet/Record[1]/SEAT_CLASS"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </SEAT_CLASS>
+            </jdbcUpdateActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="StartLog">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>307</pd:x>
+        <pd:y>76</pd:y>
+        <config>
+            <processName>/Common_Module/CommonLog.process</processName>
+        </config>
+        <pd:inputBindings>
+            <ns1:LogDetails>
+                <ns1:LogHeaders>
+                    <ns1:Correlation_Id>
+                        <xsl:value-of select="$CorrelationId/root"/>
+                    </ns1:Correlation_Id>
+                    <ns1:Application_Name>
+                        <xsl:value-of select="'Flight_Module'"/>
+                    </ns1:Application_Name>
+                    <ns1:Process_Name>
+                        <xsl:value-of select="'Seat_Availability'"/>
+                    </ns1:Process_Name>
+                    <ns1:Activity_Name>
+                        <xsl:value-of select="'ParseJson'"/>
+                    </ns1:Activity_Name>
+                    <ns1:LogType>
+                        <xsl:value-of select="'INFO'"/>
+                    </ns1:LogType>
+                    <ns1:Message_Type>
+                        <xsl:value-of select="'StartLog'"/>
+                    </ns1:Message_Type>
+                    <ns1:Status>
+                        <xsl:value-of select="'START'"/>
+                    </ns1:Status>
+                    <ns1:Timestamp>
+                        <xsl:value-of select="current-dateTime()"/>
+                    </ns1:Timestamp>
+                    <xsl:if test="$Start/pfx:root/pfx:Payload">
+                        <ns1:Payload>
+                            <xsl:value-of select="$Start/pfx:root/pfx:Payload"/>
+                        </ns1:Payload>
+                    </xsl:if>
+                </ns1:LogHeaders>
+            </ns1:LogDetails>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="UUID">
+        <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
+        <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
+        <pd:x>190</pd:x>
+        <pd:y>76</pd:y>
+        <config>
+            <variableName>CorrelationId</variableName>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <xsl:value-of select="CustomFuction:getUUID()"/>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Seat_Allocate</pd:from>
+        <pd:to>EndLog</pd:to>
+        <pd:lineType>One Bend</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>EndLog</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>UUID</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>UUID</pd:from>
+        <pd:to>StartLog</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>StartLog</pd:from>
+        <pd:to>Parse-Seat-Availibility</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Check_availability</pd:from>
+        <pd:to>EndLog</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Check_availability</pd:from>
+        <pd:to>Seat_Allocate</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>$Check_availability/resultSet/Record/AVAILABLE_SEATS&gt;0</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Parse-Seat-Availibility</pd:from>
+        <pd:to>Check_availability</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>CustomFuction:matchRegex($Parse-Seat-Availibility/ns:ActivityOutputClass/Check_SeatAvailability/FLIGHTNUMBER, '^[A-Z]{2}\s?\d{4}$') and 
+string-length($Parse-Seat-Availibility/ns:ActivityOutputClass/Check_SeatAvailability/FLIGHTNUMBER)&gt;0</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Parse-Seat-Availibility</pd:from>
+        <pd:to>Generate Error</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Catch_All</pd:from>
+        <pd:to>Catch_All_ErrorLog</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Catch_All_ErrorLog</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>ErrorLog</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>ErrorLog</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:pfx="http://www.tibco.com/schemas/Airline Reservation System/Schemas/User_Registration/Schema.xsd" xmlns:ns2="http://schemas.tibco.com/bw/plugins/xml/5.0/RESTJSONExceptions" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns1="java://java_uuidcode.java_uuidcode" xmlns:pfx5="http://www.tibco.com/pe/GenerateErrorActivity/InputSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:pfx4="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Common_Logging/Schema.xsd" xmlns:pfx3="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Flight_Reservation/Schema.xsd2" xmlns:pfx2="http://www.tibco.com/schemas/Airline Reservation System/Schemas/User_Registration/Schema.xsd2" xmlns:pfx7="http://www.tibco.com/schemas/Airline Reservation System/Admin_Module/Admin_schema/Schema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pfx6="http://www.tibco.com/schemas/Airline Reservation System/Admin_schema/Flight_Details.xsd">
+    <xsd:import namespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/User_Registration/Schema.xsd" schemaLocation="/Schemas/User_Registration/User_Registration.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/User_Registration/Schema.xsd2" schemaLocation="/Schemas/Flight_Search/Flight_Detail_Response.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Flight_Reservation/Schema.xsd2" schemaLocation="/Schemas/User_Registration/Registration_Response.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/Airline Reservation System/Admin_Module/Admin_schema/Schema.xsd" schemaLocation="/Admin_Module/Admin_schema/Response.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/Airline Reservation System/Admin_schema/Flight_Details.xsd" schemaLocation="/Admin_Module/Admin_schema/Admin_Flight/New_Flight_Detail.xsd"/>
+    <pd:name>Admin_Module/Admin_Flight Details/New_Flight_Details.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="Payload" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:startType>
+    <pd:startX>46</pd:startX>
+    <pd:startY>164</pd:startY>
+    <pd:returnBindings>
+        <root>
+            <Response_Payload>
+                <xsl:value-of select="$Render-JSON/ns:ActivityOutputClass/jsonString"/>
+            </Response_Payload>
+        </root>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="Response_Payload" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:endType>
+    <pd:endX>832</pd:endX>
+    <pd:endY>175</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1679993295551</pd:targetNamespace>
+    <pd:activity name="Parse JSON">
+        <pd:type>com.tibco.plugin.json.activities.JSONParserActivity</pd:type>
+        <pd:resourceType>ae.activities.JSONParserActivity</pd:resourceType>
+        <pd:x>271</pd:x>
+        <pd:y>167</pd:y>
+        <config>
+            <SchemaType>xsdType</SchemaType>
+            <BadgerfishCheck>false</BadgerfishCheck>
+            <ValidateOutputEnable>true</ValidateOutputEnable>
+            <ActivityOutputEditor ref="pfx6:Flight_Details"/>
+        </config>
+        <pd:inputBindings>
+            <ns:ActivityInputClass>
+                <jsonString>
+                    <xsl:value-of select="$Start/root/Payload"/>
+                </jsonString>
+            </ns:ActivityInputClass>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Render JSON">
+        <pd:type>com.tibco.plugin.json.activities.JSONRenderActivity</pd:type>
+        <pd:resourceType>ae.activities.JSONRenderActivity</pd:resourceType>
+        <pd:x>564</pd:x>
+        <pd:y>170</pd:y>
+        <config>
+            <SchemaType>xsdType</SchemaType>
+            <BadgerfishCheck>false</BadgerfishCheck>
+            <ActivityInputEditor ref="pfx7:root"/>
+        </config>
+        <pd:inputBindings>
+            <ns:ActivityInputClass>
+                <pfx7:root>
+                    <pfx7:Response_Message>
+                        <xsl:value-of select="'Flight Details inserted'"/>
+                    </pfx7:Response_Message>
+                    <pfx7:Response_Code>
+                        <xsl:value-of select="'200'"/>
+                    </pfx7:Response_Code>
+                </pfx7:root>
+            </ns:ActivityInputClass>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="StartLog">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>157</pd:x>
+        <pd:y>165</pd:y>
+        <config>
+            <processName>/Common_Module/CommonLog.process</processName>
+        </config>
+        <pd:inputBindings>
+            <pfx4:LogDetails>
+                <pfx4:LogHeaders>
+                    <pfx4:Correlation_Id>
+                        <xsl:value-of select="ns1:getUUID()"/>
+                    </pfx4:Correlation_Id>
+                    <pfx4:Application_Name>
+                        <xsl:value-of select="'Admin_Flight_Details'"/>
+                    </pfx4:Application_Name>
+                    <pfx4:Process_Name>
+                        <xsl:value-of select="'New_Flight_Details'"/>
+                    </pfx4:Process_Name>
+                    <pfx4:Activity_Name>
+                        <xsl:value-of select="'ParseJson'"/>
+                    </pfx4:Activity_Name>
+                    <pfx4:LogType>
+                        <xsl:value-of select="'START'"/>
+                    </pfx4:LogType>
+                    <pfx4:Message_Type>
+                        <xsl:value-of select="'RequestLog'"/>
+                    </pfx4:Message_Type>
+                    <pfx4:Status>
+                        <xsl:value-of select="'Start'"/>
+                    </pfx4:Status>
+                    <pfx4:Timestamp>
+                        <xsl:value-of select="current-dateTime()"/>
+                    </pfx4:Timestamp>
+                    <xsl:if test="$Start/root/Payload">
+                        <pfx4:Payload>
+                            <xsl:value-of select="$Start/root/Payload"/>
+                        </pfx4:Payload>
+                    </xsl:if>
+                </pfx4:LogHeaders>
+            </pfx4:LogDetails>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="EndLog">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>680</pd:x>
+        <pd:y>173</pd:y>
+        <config>
+            <processName>/Common_Module/CommonLog.process</processName>
+        </config>
+        <pd:inputBindings>
+            <pfx4:LogDetails>
+                <pfx4:LogHeaders>
+                    <pfx4:Correlation_Id>
+                        <xsl:value-of select="ns1:getUUID()"/>
+                    </pfx4:Correlation_Id>
+                    <pfx4:Application_Name>
+                        <xsl:value-of select="'Admin_Flight_Details'"/>
+                    </pfx4:Application_Name>
+                    <pfx4:Process_Name>
+                        <xsl:value-of select="'New_Flight_Details'"/>
+                    </pfx4:Process_Name>
+                    <pfx4:Activity_Name>
+                        <xsl:value-of select="'ParseJson'"/>
+                    </pfx4:Activity_Name>
+                    <pfx4:LogType>
+                        <xsl:value-of select="'END'"/>
+                    </pfx4:LogType>
+                    <pfx4:Message_Type>
+                        <xsl:value-of select="'ResponseLog'"/>
+                    </pfx4:Message_Type>
+                    <pfx4:Status>
+                        <xsl:value-of select="'End'"/>
+                    </pfx4:Status>
+                    <pfx4:Timestamp>
+                        <xsl:value-of select="current-dateTime()"/>
+                    </pfx4:Timestamp>
+                    <pfx4:Payload>
+                        <xsl:value-of select="$Render-JSON/ns:ActivityOutputClass/jsonString"/>
+                    </pfx4:Payload>
+                </pfx4:LogHeaders>
+            </pfx4:LogDetails>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="ErrorLog">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>720</pd:x>
+        <pd:y>284</pd:y>
+        <config>
+            <processName>/Common_Module/CommonLog.process</processName>
+        </config>
+        <pd:inputBindings>
+            <pfx4:LogDetails>
+                <pfx4:LogHeaders>
+                    <pfx4:Correlation_Id>
+                        <xsl:value-of select="ns1:getUUID()"/>
+                    </pfx4:Correlation_Id>
+                    <pfx4:Application_Name>
+                        <xsl:value-of select="'User_Registration'"/>
+                    </pfx4:Application_Name>
+                    <pfx4:Process_Name>
+                        <xsl:value-of select="'Create_Account'"/>
+                    </pfx4:Process_Name>
+                    <pfx4:Activity_Name>
+                        <xsl:value-of select="'catch All'"/>
+                    </pfx4:Activity_Name>
+                    <pfx4:LogType>
+                        <xsl:value-of select="'Error'"/>
+                    </pfx4:LogType>
+                    <pfx4:Message_Type>
+                        <xsl:value-of select="'Error Message'"/>
+                    </pfx4:Message_Type>
+                    <pfx4:Status>
+                        <xsl:value-of select="'Error'"/>
+                    </pfx4:Status>
+                    <pfx4:Timestamp>
+                        <xsl:value-of select="current-dateTime()"/>
+                    </pfx4:Timestamp>
+                </pfx4:LogHeaders>
+                <pfx4:ErrorDetails>
+                    <xsl:if test="$_error_Render-JSON/ns2:JSONRenderException/msgCode">
+                        <pfx4:ErrorCode>
+                            <xsl:value-of select="$_error_Render-JSON/ns2:JSONRenderException/msgCode"/>
+                        </pfx4:ErrorCode>
+                    </xsl:if>
+                    <pfx4:Error_Message>
+                        <xsl:value-of select="$Catch/exceptiondata/*"/>
+                    </pfx4:Error_Message>
+                </pfx4:ErrorDetails>
+            </pfx4:LogDetails>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>576</pd:x>
+        <pd:y>283</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="New_Flight_Details">
+        <pd:type>com.tibco.plugin.jdbc.JDBCUpdateActivity</pd:type>
+        <pd:resourceType>ae.activities.JDBCUpdateActivity</pd:resourceType>
+        <pd:x>410</pd:x>
+        <pd:y>169</pd:y>
+        <config>
+            <timeout>10</timeout>
+            <commit>false</commit>
+            <emptyStrAsNil>false</emptyStrAsNil>
+            <jdbcSharedConfig>/Admin_Module/Connections/JDBC admin_Login Connection.sharedjdbc</jdbcSharedConfig>
+            <statement>Insert into AIRLINE_FLIGHTDETAILS ( AIRLINE,FLIGHTNUMBER,DEPARTURE,ARRIVAL,DEPARTUREDATE,ARRIVALDATE,DEPARTURETIME,ARRIVALTIME,DURATION,PRICE,STATUS)
+VALUES( ?,?,?,?,TO_DATE(?, 'YYYY-MM-DD'),TO_DATE(?, 'YYYY-MM-DD'),TO_TIMESTAMP(?, 'YYYY-MM-DD HH24:MI:SS'),TO_TIMESTAMP(?, 'YYYY-MM-DD HH24:MI:SS'),?,?,?)
+</statement>
+            <Prepared_Param_DataType>
+                <parameter>
+                    <parameterName>AIRLINE</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>FLIGHTNUMBER</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>DEPARTURE</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>ARRIVAL</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>DEPARTUREDATE</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>ARRIVALDATE</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>DEPARTURETIME</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>ARRIVALTIME</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>DURATION</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>PRICE</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>STATUS</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+            </Prepared_Param_DataType>
+        </config>
+        <pd:inputBindings>
+            <xsl:for-each select="$Parse-JSON/ns:ActivityOutputClass/pfx6:Flight_Details/pfx6:Flights">
+                <jdbcUpdateActivityInput>
+                    <AIRLINE>
+                        <xsl:value-of select="pfx6:Airline"/>
+                    </AIRLINE>
+                    <FLIGHTNUMBER>
+                        <xsl:choose>
+                            <xsl:when test="exists(pfx6:Flight_number)">
+                                <xsl:value-of select="pfx6:Flight_number"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </FLIGHTNUMBER>
+                    <DEPARTURE>
+                        <xsl:value-of select="pfx6:Departure"/>
+                    </DEPARTURE>
+                    <ARRIVAL>
+                        <xsl:value-of select="pfx6:Arrival"/>
+                    </ARRIVAL>
+                    <DEPARTUREDATE>
+                        <xsl:choose>
+                            <xsl:when test="exists(pfx6:Departure_Date)">
+                                <xsl:value-of select="pfx6:Departure_Date"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </DEPARTUREDATE>
+                    <ARRIVALDATE>
+                        <xsl:choose>
+                            <xsl:when test="exists(pfx6:Arrival_Date)">
+                                <xsl:value-of select="pfx6:Arrival_Date"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </ARRIVALDATE>
+                    <DEPARTURETIME>
+                        <xsl:choose>
+                            <xsl:when test="exists(pfx6:Departure_Time)">
+                                <xsl:value-of select="pfx6:Departure_Time"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </DEPARTURETIME>
+                    <ARRIVALTIME>
+                        <xsl:choose>
+                            <xsl:when test="exists(pfx6:Arrival_Time)">
+                                <xsl:value-of select="pfx6:Arrival_Time"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </ARRIVALTIME>
+                    <DURATION>
+                        <xsl:value-of select="pfx6:Duration"/>
+                    </DURATION>
+                    <PRICE>
+                        <xsl:value-of select="pfx6:Price"/>
+                    </PRICE>
+                    <STATUS>
+                        <xsl:value-of select="pfx6:Status"/>
+                    </STATUS>
+                </jdbcUpdateActivityInput>
+            </xsl:for-each>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Render JSON</pd:from>
+        <pd:to>EndLog</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>StartLog</pd:from>
+        <pd:to>Parse JSON</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>EndLog</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>StartLog</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>ErrorLog</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>ErrorLog</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>One Bend</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Parse JSON</pd:from>
+        <pd:to>New_Flight_Details</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>New_Flight_Details</pd:from>
+        <pd:to>Render JSON</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

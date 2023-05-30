@@ -1,0 +1,741 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:pfx="http://www.tibco.com/schemas/Airline Reservation System/Schemas/User_Registration/Schema.xsd" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns2="http://schemas.tibco.com/bw/plugins/xml/5.0/RESTJSONExceptions" xmlns:ns1="java://java_uuidcode.java_uuidcode" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:pfx5="http://www.tibco.com/pe/GenerateErrorActivity/InputSchema" xmlns:pfx4="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Common_Logging/Schema.xsd" xmlns:pfx3="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Flight_Reservation/Schema.xsd2" xmlns:pfx2="http://www.tibco.com/schemas/Airline Reservation System/Schemas/User_Registration/Schema.xsd2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pfx6="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Common_Logging/Schema.xsd3">
+    <xsd:import namespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/User_Registration/Schema.xsd" schemaLocation="/Schemas/User_Registration/User_Registration.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/User_Registration/Schema.xsd2" schemaLocation="/Schemas/Flight_Search/Flight_Detail_Response.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Flight_Reservation/Schema.xsd2" schemaLocation="/Schemas/User_Registration/Registration_Response.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Common_Logging/Schema.xsd3" schemaLocation="/Schemas/Common_Logging/Exception.xsd"/>
+    <pd:name>User_Registration_Module/User_Profile/Create_Account.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="Payload" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:startType>
+    <pd:startX>27</pd:startX>
+    <pd:startY>35</pd:startY>
+    <pd:returnBindings>
+        <xsl:choose>
+            <xsl:when test="exists($New_User/resultSet/Record)">
+                <root>
+                    <Response_Payload>
+                        <xsl:value-of select="$Render-JSON/ns:ActivityOutputClass/jsonString"/>
+                    </Response_Payload>
+                </root>
+            </xsl:when>
+            <xsl:when test="contains($_error_Generate-Error/pfx6:Root/pfx6:Message_Code,'100') or&#xA;contains($_error_Generate-Error/pfx6:Root/pfx6:Message_Code,'101') or&#xA;contains($_error_Generate-Error/pfx6:Root/pfx6:Message_Code,'102') or&#xA;contains($_error_Generate-Error/pfx6:Root/pfx6:Message_Code,'103') or&#xA;contains($_error_Generate-Error/pfx6:Root/pfx6:Message_Code,'104') or &#xA;contains($_error_Generate-Error/pfx6:Root/pfx6:Message_Code,'105') or &#xA;contains($_error_Generate-Error/pfx6:Root/pfx6:Message_Code,'106') or&#xA;contains($_error_Generate-Error/pfx6:Root/pfx6:Message_Code,'107') or&#xA;contains($_error_Generate-Error/pfx6:Root/pfx6:Message_Code,'108')">
+                <root>
+                    <xsl:if test="$_error_Generate-Error/pfx6:Root/pfx6:Message">
+                        <Response_Payload>
+                            <xsl:value-of select="$_error_Generate-Error/pfx6:Root/pfx6:Message"/>
+                        </Response_Payload>
+                    </xsl:if>
+                </root>
+            </xsl:when>
+            <xsl:otherwise>
+                <root>
+                    <Response_Payload>
+                        <xsl:value-of select="$Catch/exceptiondata/*"/>
+                    </Response_Payload>
+                </root>
+            </xsl:otherwise>
+        </xsl:choose>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="Response_Payload" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:endType>
+    <pd:endX>1019</pd:endX>
+    <pd:endY>168</pd:endY>
+    <pd:errorSchemas>
+        <Schema ref="pfx6:Root"/>
+    </pd:errorSchemas>
+    <pd:processVariables>
+        <Correlation>
+            <xsd:element name="root" type="xsd:string"/>
+        </Correlation>
+    </pd:processVariables>
+    <pd:targetNamespace>http://xmlns.example.com/1679993295551</pd:targetNamespace>
+    <pd:activity name="Assign">
+        <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
+        <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
+        <pd:x>27</pd:x>
+        <pd:y>168</pd:y>
+        <config>
+            <variableName>Correlation</variableName>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <xsl:value-of select="ns1:getUUID()"/>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>883</pd:x>
+        <pd:y>295</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="EndLog">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>888</pd:x>
+        <pd:y>168</pd:y>
+        <config>
+            <processName>/Common_Module/CommonLog.process</processName>
+        </config>
+        <pd:inputBindings>
+            <pfx4:LogDetails>
+                <pfx4:LogHeaders>
+                    <pfx4:Correlation_Id>
+                        <xsl:value-of select="$Correlation/root"/>
+                    </pfx4:Correlation_Id>
+                    <pfx4:Application_Name>
+                        <xsl:value-of select="'User_Regisration_Module'"/>
+                    </pfx4:Application_Name>
+                    <pfx4:Process_Name>
+                        <xsl:value-of select="'Create_Account'"/>
+                    </pfx4:Process_Name>
+                    <pfx4:Activity_Name>
+                        <xsl:value-of select="'ParseJson'"/>
+                    </pfx4:Activity_Name>
+                    <pfx4:LogType>
+                        <xsl:value-of select="'END'"/>
+                    </pfx4:LogType>
+                    <pfx4:Message_Type>
+                        <xsl:value-of select="'ResponseLog'"/>
+                    </pfx4:Message_Type>
+                    <pfx4:Status>
+                        <xsl:value-of select="'End'"/>
+                    </pfx4:Status>
+                    <pfx4:Timestamp>
+                        <xsl:value-of select="current-dateTime()"/>
+                    </pfx4:Timestamp>
+                    <pfx4:Payload>
+                        <xsl:value-of select="$Render-JSON/ns:ActivityOutputClass/jsonString"/>
+                    </pfx4:Payload>
+                </pfx4:LogHeaders>
+            </pfx4:LogDetails>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="ErrorLog">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>1014</pd:x>
+        <pd:y>295</pd:y>
+        <config>
+            <processName>/Common_Module/CommonLog.process</processName>
+        </config>
+        <pd:inputBindings>
+            <pfx4:LogDetails>
+                <pfx4:LogHeaders>
+                    <pfx4:Correlation_Id>
+                        <xsl:value-of select="$Correlation/root"/>
+                    </pfx4:Correlation_Id>
+                    <pfx4:Application_Name>
+                        <xsl:value-of select="'User_Registration'"/>
+                    </pfx4:Application_Name>
+                    <pfx4:Process_Name>
+                        <xsl:value-of select="'Create_Account'"/>
+                    </pfx4:Process_Name>
+                    <pfx4:Activity_Name>
+                        <xsl:value-of select="'catch All'"/>
+                    </pfx4:Activity_Name>
+                    <pfx4:LogType>
+                        <xsl:value-of select="'Error'"/>
+                    </pfx4:LogType>
+                    <pfx4:Message_Type>
+                        <xsl:value-of select="'Error Message'"/>
+                    </pfx4:Message_Type>
+                    <pfx4:Status>
+                        <xsl:value-of select="'Error'"/>
+                    </pfx4:Status>
+                    <pfx4:Timestamp>
+                        <xsl:value-of select="current-dateTime()"/>
+                    </pfx4:Timestamp>
+                </pfx4:LogHeaders>
+                <pfx4:ErrorDetails>
+                    <xsl:if test="$_error_Render-JSON/ns2:JSONRenderException/msgCode">
+                        <pfx4:ErrorCode>
+                            <xsl:value-of select="$_error_Render-JSON/ns2:JSONRenderException/msgCode"/>
+                        </pfx4:ErrorCode>
+                    </xsl:if>
+                    <pfx4:Error_Message>
+                        <xsl:value-of select="$Catch/exceptiondata/*"/>
+                    </pfx4:Error_Message>
+                </pfx4:ErrorDetails>
+            </pfx4:LogDetails>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Generate Error">
+        <pd:type>com.tibco.pe.core.GenerateErrorActivity</pd:type>
+        <pd:resourceType>ae.activities.throw</pd:resourceType>
+        <pd:x>395</pd:x>
+        <pd:y>295</pd:y>
+        <config>
+            <faultName>Schema</faultName>
+        </config>
+        <pd:inputBindings>
+            <pfx5:ActivityInput>
+                <xsl:choose>
+                    <xsl:when test="string-length($Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration/pfx:Firstname)=0">
+                        <data>
+                            <pfx6:Root>
+                                <pfx6:Message>
+                                    <xsl:value-of select="'Firstname should not be empty'"/>
+                                </pfx6:Message>
+                                <pfx6:Message_Code>
+                                    <xsl:value-of select="'100'"/>
+                                </pfx6:Message_Code>
+                            </pfx6:Root>
+                        </data>
+                    </xsl:when>
+                    <xsl:when test="not(ns1:matchRegex($Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration/pfx:Firstname,'^[a-zA-Z\s]{1,100}$'))">
+                        <data>
+                            <pfx6:Root>
+                                <pfx6:Message>
+                                    <xsl:value-of select="'Invalid Firstname'"/>
+                                </pfx6:Message>
+                                <pfx6:Message_Code>
+                                    <xsl:value-of select="'101'"/>
+                                </pfx6:Message_Code>
+                            </pfx6:Root>
+                        </data>
+                    </xsl:when>
+                    <xsl:when test="string-length($Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration/pfx:Lastname)=0">
+                        <data>
+                            <pfx6:Root>
+                                <pfx6:Message>
+                                    <xsl:value-of select="'Lastname should not be empty'"/>
+                                </pfx6:Message>
+                                <pfx6:Message_Code>
+                                    <xsl:value-of select="'102'"/>
+                                </pfx6:Message_Code>
+                            </pfx6:Root>
+                        </data>
+                    </xsl:when>
+                    <xsl:when test="not(ns1:matchRegex($Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration/pfx:Lastname,'^[a-zA-Z\s]{1,100}$'))">
+                        <data>
+                            <pfx6:Root>
+                                <pfx6:Message>
+                                    <xsl:value-of select="'Invalid lastname'"/>
+                                </pfx6:Message>
+                                <pfx6:Message_Code>
+                                    <xsl:value-of select="'103'"/>
+                                </pfx6:Message_Code>
+                            </pfx6:Root>
+                        </data>
+                    </xsl:when>
+                    <xsl:when test="string-length($Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration/pfx:Email)=0">
+                        <data>
+                            <pfx6:Root>
+                                <pfx6:Message>
+                                    <xsl:value-of select="'Email_Id should not be empty'"/>
+                                </pfx6:Message>
+                                <pfx6:Message_Code>
+                                    <xsl:value-of select="'104'"/>
+                                </pfx6:Message_Code>
+                            </pfx6:Root>
+                        </data>
+                    </xsl:when>
+                    <xsl:when test="not(ns1:matchRegex($Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration/pfx:Phone_no,'^[0-9]{10}$'))">
+                        <data>
+                            <pfx6:Root>
+                                <pfx6:Message>
+                                    <xsl:value-of select="'Invalid Phone number'"/>
+                                </pfx6:Message>
+                                <pfx6:Message_Code>
+                                    <xsl:value-of select="'104'"/>
+                                </pfx6:Message_Code>
+                            </pfx6:Root>
+                        </data>
+                    </xsl:when>
+                    <xsl:when test="not(ns1:matchRegex($Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration/pfx:Email,'^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$'))">
+                        <data>
+                            <pfx6:Root>
+                                <pfx6:Message>
+                                    <xsl:value-of select="'Invalid Email_Id'"/>
+                                </pfx6:Message>
+                                <pfx6:Message_Code>
+                                    <xsl:value-of select="'105'"/>
+                                </pfx6:Message_Code>
+                            </pfx6:Root>
+                        </data>
+                    </xsl:when>
+                    <xsl:when test="not(ns1:matchRegex($Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration/pfx:Username,'[A-Za-z][A-Za-z0-9_]{7,9}'))">
+                        <data>
+                            <pfx6:Root>
+                                <pfx6:Message>
+                                    <xsl:value-of select="'Invalid Username'"/>
+                                </pfx6:Message>
+                                <pfx6:Message_Code>
+                                    <xsl:value-of select="'106'"/>
+                                </pfx6:Message_Code>
+                            </pfx6:Root>
+                        </data>
+                    </xsl:when>
+                    <xsl:when test="not(ns1:matchRegex($Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration/pfx:Password,'[A-Za-z0-9]{4,10}'))">
+                        <data>
+                            <pfx6:Root>
+                                <pfx6:Message>
+                                    <xsl:value-of select="'Invalid password'"/>
+                                </pfx6:Message>
+                                <pfx6:Message_Code>
+                                    <xsl:value-of select="'107'"/>
+                                </pfx6:Message_Code>
+                            </pfx6:Root>
+                        </data>
+                    </xsl:when>
+                    <xsl:when test="$Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration/pfx:Email =$JDBC-Query/resultSet/Record/EMAIL">
+                        <data>
+                            <pfx6:Root>
+                                <pfx6:Message>
+                                    <xsl:value-of select="'User Already Exists'"/>
+                                </pfx6:Message>
+                                <pfx6:Message_Code>
+                                    <xsl:value-of select="'108'"/>
+                                </pfx6:Message_Code>
+                            </pfx6:Root>
+                        </data>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <data>
+                            <pfx6:Root>
+                                <pfx6:Message>
+                                    <xsl:value-of select="'Invalid Input'"/>
+                                </pfx6:Message>
+                                <pfx6:Message_Code>
+                                    <xsl:value-of select="'108'"/>
+                                </pfx6:Message_Code>
+                            </pfx6:Root>
+                        </data>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </pfx5:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Insert Records">
+        <pd:type>com.tibco.plugin.jdbc.JDBCUpdateActivity</pd:type>
+        <pd:resourceType>ae.activities.JDBCUpdateActivity</pd:resourceType>
+        <pd:x>519</pd:x>
+        <pd:y>168</pd:y>
+        <config>
+            <timeout>10</timeout>
+            <commit>false</commit>
+            <emptyStrAsNil>false</emptyStrAsNil>
+            <jdbcSharedConfig>/Connections/Login/JDBC Connection.sharedjdbc</jdbcSharedConfig>
+            <statement>Insert into AIRLINE_USER_REGISTRATION ( FIRSTNAME,LASTNAME,EMAIL,PHONENO,STATE,COUNTRY,PINCODE,USERNAME,PASSWORD)
+VALUES( ?,?,?,?,?,?,?,?,?)</statement>
+            <Prepared_Param_DataType>
+                <parameter>
+                    <parameterName>Firstname</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>Lastname</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>Email</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>PhoneNo</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>State</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>Country</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>Pincode</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>Username</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>Password</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+            </Prepared_Param_DataType>
+        </config>
+        <pd:inputBindings>
+            <xsl:for-each select="$Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration">
+                <jdbcUpdateActivityInput>
+                    <Firstname>
+                        <xsl:value-of select="pfx:Firstname"/>
+                    </Firstname>
+                    <Lastname>
+                        <xsl:value-of select="pfx:Lastname"/>
+                    </Lastname>
+                    <Email>
+                        <xsl:value-of select="pfx:Email"/>
+                    </Email>
+                    <PhoneNo>
+                        <xsl:value-of select="pfx:Phone_no"/>
+                    </PhoneNo>
+                    <State>
+                        <xsl:value-of select="pfx:State"/>
+                    </State>
+                    <Country>
+                        <xsl:value-of select="pfx:Country"/>
+                    </Country>
+                    <Pincode>
+                        <xsl:value-of select="pfx:Pincode"/>
+                    </Pincode>
+                    <Username>
+                        <xsl:value-of select="pfx:Username"/>
+                    </Username>
+                    <Password>
+                        <xsl:value-of select="pfx:Password"/>
+                    </Password>
+                </jdbcUpdateActivityInput>
+            </xsl:for-each>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="JDBC Query">
+        <pd:type>com.tibco.plugin.jdbc.JDBCQueryActivity</pd:type>
+        <pd:resourceType>ae.activities.JDBCQueryActivity</pd:resourceType>
+        <pd:x>394</pd:x>
+        <pd:y>168</pd:y>
+        <config>
+            <timeout>10</timeout>
+            <commit>false</commit>
+            <maxRows>100</maxRows>
+            <emptyStrAsNil>false</emptyStrAsNil>
+            <statement>SELECT  EMAIL FROM AIRLINE_USER_REGISTRATION WHERE EMAIL = ?</statement>
+            <jdbcSharedConfig>/Connections/JDBC Connection.sharedjdbc</jdbcSharedConfig>
+            <Prepared_Param_DataType>
+                <parameter>
+                    <parameterName>EMAIL</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+            </Prepared_Param_DataType>
+            <QueryOutputCachedSchemaColumns>EMAIL</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>VARCHAR2</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <oraObjects/>
+            <oraTables/>
+        </config>
+        <pd:inputBindings>
+            <jdbcQueryActivityInput>
+                <EMAIL>
+                    <xsl:choose>
+                        <xsl:when test="exists($Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration/pfx:Email)">
+                            <xsl:value-of select="$Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration/pfx:Email"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </EMAIL>
+            </jdbcQueryActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="New_User">
+        <pd:type>com.tibco.plugin.jdbc.JDBCQueryActivity</pd:type>
+        <pd:resourceType>ae.activities.JDBCQueryActivity</pd:resourceType>
+        <pd:x>653</pd:x>
+        <pd:y>168</pd:y>
+        <config>
+            <timeout>10</timeout>
+            <commit>false</commit>
+            <maxRows>100</maxRows>
+            <emptyStrAsNil>false</emptyStrAsNil>
+            <jdbcSharedConfig>/Connections/Login/JDBC Connection.sharedjdbc</jdbcSharedConfig>
+            <statement>SELECT  FIRSTNAME,LASTNAME,EMAIL,PHONENO,STATE,COUNTRY,PINCODE
+FROM AIRLINE_USER_REGISTRATION
+WHERE EMAIL=?</statement>
+            <Prepared_Param_DataType>
+                <parameter>
+                    <parameterName>Email</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+            </Prepared_Param_DataType>
+            <QueryOutputCachedSchemaColumns>FIRSTNAME</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>VARCHAR2</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>LASTNAME</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>VARCHAR2</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>EMAIL</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>VARCHAR2</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>PHONENO</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>VARCHAR2</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>STATE</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>VARCHAR2</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>COUNTRY</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>VARCHAR2</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>PINCODE</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>VARCHAR2</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <oraObjects/>
+            <oraTables/>
+        </config>
+        <pd:inputBindings>
+            <jdbcQueryActivityInput>
+                <Email>
+                    <xsl:choose>
+                        <xsl:when test="exists($Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration/pfx:Email)">
+                            <xsl:value-of select="$Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration/pfx:Email"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </Email>
+            </jdbcQueryActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Parse JSON">
+        <pd:type>com.tibco.plugin.json.activities.JSONParserActivity</pd:type>
+        <pd:resourceType>ae.activities.JSONParserActivity</pd:resourceType>
+        <pd:x>261</pd:x>
+        <pd:y>168</pd:y>
+        <config>
+            <SchemaType>xsdType</SchemaType>
+            <BadgerfishCheck>false</BadgerfishCheck>
+            <ActivityOutputEditor ref="pfx:User_Registration"/>
+        </config>
+        <pd:inputBindings>
+            <ns:ActivityInputClass>
+                <jsonString>
+                    <xsl:value-of select="$Start/root/Payload"/>
+                </jsonString>
+            </ns:ActivityInputClass>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Render JSON">
+        <pd:type>com.tibco.plugin.json.activities.JSONRenderActivity</pd:type>
+        <pd:resourceType>ae.activities.JSONRenderActivity</pd:resourceType>
+        <pd:x>770</pd:x>
+        <pd:y>168</pd:y>
+        <config>
+            <SchemaType>xsdType</SchemaType>
+            <BadgerfishCheck>false</BadgerfishCheck>
+            <ActivityInputEditor ref="pfx3:Registration_Response"/>
+        </config>
+        <pd:inputBindings>
+            <ns:ActivityInputClass>
+                <pfx3:Registration_Response>
+                    <pfx3:Res_Code>
+                        <xsl:value-of select="200"/>
+                    </pfx3:Res_Code>
+                    <pfx3:Message>
+                        <xsl:value-of select="'User registered successfully'"/>
+                    </pfx3:Message>
+                    <xsl:for-each select="$New_User/resultSet/Record[1]">
+                        <pfx3:Data>
+                            <xsl:if test="FIRSTNAME">
+                                <pfx3:FirstName>
+                                    <xsl:value-of select="FIRSTNAME"/>
+                                </pfx3:FirstName>
+                            </xsl:if>
+                            <xsl:if test="LASTNAME">
+                                <pfx3:LastName>
+                                    <xsl:value-of select="LASTNAME"/>
+                                </pfx3:LastName>
+                            </xsl:if>
+                            <xsl:if test="EMAIL">
+                                <pfx3:Email>
+                                    <xsl:value-of select="EMAIL"/>
+                                </pfx3:Email>
+                            </xsl:if>
+                            <xsl:if test="PHONENO">
+                                <pfx3:PhoneNo>
+                                    <xsl:value-of select="PHONENO"/>
+                                </pfx3:PhoneNo>
+                            </xsl:if>
+                            <xsl:if test="STATE">
+                                <pfx3:State>
+                                    <xsl:value-of select="STATE"/>
+                                </pfx3:State>
+                            </xsl:if>
+                            <xsl:if test="COUNTRY">
+                                <pfx3:Country>
+                                    <xsl:value-of select="COUNTRY"/>
+                                </pfx3:Country>
+                            </xsl:if>
+                            <xsl:if test="PINCODE">
+                                <pfx3:Pincode>
+                                    <xsl:value-of select="PINCODE"/>
+                                </pfx3:Pincode>
+                            </xsl:if>
+                        </pfx3:Data>
+                    </xsl:for-each>
+                </pfx3:Registration_Response>
+            </ns:ActivityInputClass>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="StartLog">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>123</pd:x>
+        <pd:y>168</pd:y>
+        <config>
+            <processName>/Common_Module/CommonLog.process</processName>
+        </config>
+        <pd:inputBindings>
+            <pfx4:LogDetails>
+                <pfx4:LogHeaders>
+                    <pfx4:Correlation_Id>
+                        <xsl:value-of select="$Correlation/root"/>
+                    </pfx4:Correlation_Id>
+                    <pfx4:Application_Name>
+                        <xsl:value-of select="'User_Regisration_Module'"/>
+                    </pfx4:Application_Name>
+                    <pfx4:Process_Name>
+                        <xsl:value-of select="'Create_Account'"/>
+                    </pfx4:Process_Name>
+                    <pfx4:Activity_Name>
+                        <xsl:value-of select="'ParseJson'"/>
+                    </pfx4:Activity_Name>
+                    <pfx4:LogType>
+                        <xsl:value-of select="'START'"/>
+                    </pfx4:LogType>
+                    <pfx4:Message_Type>
+                        <xsl:value-of select="'RequestLog'"/>
+                    </pfx4:Message_Type>
+                    <pfx4:Status>
+                        <xsl:value-of select="'Start'"/>
+                    </pfx4:Status>
+                    <pfx4:Timestamp>
+                        <xsl:value-of select="current-dateTime()"/>
+                    </pfx4:Timestamp>
+                    <xsl:if test="$Start/root/Payload">
+                        <pfx4:Payload>
+                            <xsl:value-of select="$Start/root/Payload"/>
+                        </pfx4:Payload>
+                    </xsl:if>
+                </pfx4:LogHeaders>
+            </pfx4:LogDetails>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Parse JSON</pd:from>
+        <pd:to>JDBC Query</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Render JSON</pd:from>
+        <pd:to>EndLog</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Insert Records</pd:from>
+        <pd:to>New_User</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>New_User</pd:from>
+        <pd:to>Render JSON</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>StartLog</pd:from>
+        <pd:to>Parse JSON</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>EndLog</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Assign</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>ErrorLog</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>ErrorLog</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Assign</pd:from>
+        <pd:to>StartLog</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>JDBC Query</pd:from>
+        <pd:to>Insert Records</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>ns1:matchRegex($Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration/pfx:Firstname,'^[a-zA-Z\s]{1,100}$') and 
+string-length($Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration/pfx:Firstname)&gt;0 and 
+ns1:matchRegex($Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration/pfx:Lastname,'^[a-zA-Z\s]{1,100}$') and 
+string-length($Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration/pfx:Lastname)&gt;0 and 
+ns1:matchRegex($Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration/pfx:Email,'^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$') and 
+string-length($Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration/pfx:Email)&gt;0 and 
+ns1:matchRegex($Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration/pfx:Phone_no,'^[0-9]{10}$') and 
+ns1:matchRegex($Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration/pfx:Username,'[A-Za-z][A-Za-z0-9_]{7,9}') and
+ns1:matchRegex($Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration/pfx:Password,'[A-Za-z0-9]{4,10}') and
+
+$Parse-JSON/ns:ActivityOutputClass/pfx:User_Registration/pfx:Email !=$JDBC-Query/resultSet/Record/EMAIL</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>JDBC Query</pd:from>
+        <pd:to>Generate Error</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

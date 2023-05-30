@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	 xmlns="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Flight_Reservation/Schema.xsd"
+	 targetNamespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Flight_Reservation/Schema.xsd"
+	 elementFormDefault="qualified"
+	 attributeFormDefault="unqualified">
+	<xs:import namespace="http://www.w3.org/XML/1998/namespace"/>
+	<xs:element name="Flight_Search" type="Flight_SearchType"/>
+	<xs:complexType name="Flight_SearchType">
+		<xs:sequence>
+			<xs:element ref="Departure" minOccurs="0"/>
+			<xs:element ref="Arrival" minOccurs="0"/>
+			<xs:element ref="Departure_Date" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Departure" type="xs:string"/>
+	<xs:element name="Arrival" type="xs:string"/>
+	<xs:element name="Departure_Date" type="xs:string"/>
+</xs:schema>

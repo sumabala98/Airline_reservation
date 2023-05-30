@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:CustomFuction="java://java_uuidcode.java_uuidcode" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:pfx="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Schema.xsd" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns2="http://www.tibco.com/pe/GenerateErrorActivity/InputSchema" xmlns:ns1="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Common_Logging/Schema.xsd" xmlns:ns4="http://www.tibco.com/pe/EngineTypes" xmlns:ns3="http://www.tibco.com/pe/DeployedVarsType" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:pfx4="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Common_Logging/Schema.xsd3" xmlns:pfx3="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Schema.xsd3" xmlns:pfx2="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Schema.xsd2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <xsd:import namespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Schema.xsd2" schemaLocation="/Schemas/Login/Response_Login.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Schema.xsd3" schemaLocation="/Schemas/Payload.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Schema.xsd" schemaLocation="/Schemas/Login/Login.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Common_Logging/Schema.xsd3" schemaLocation="/Schemas/Common_Logging/Exception.xsd"/>
+    <pd:name>User_Login/UserLogin/Login.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType ref="pfx:Login"/>
+    <pd:startX>75</pd:startX>
+    <pd:startY>81</pd:startY>
+    <pd:returnCoercions>
+        <pd:coercion xpath="$_error/ns4:ErrorReport/Data/*" type="pfx4:RootType"/>
+    </pd:returnCoercions>
+    <pd:returnBindings>
+        <xsl:choose>
+            <xsl:when test="exists($_error/ns4:ErrorReport)">
+                <pfx2:Message>
+                    <xsl:value-of select="$_error/ns4:ErrorReport/Msg"/>
+                </pfx2:Message>
+            </xsl:when>
+            <xsl:when test="contains($_error/ns4:ErrorReport/Data/*/pfx4:Message_Code,'100') or&#xA;contains($_error/ns4:ErrorReport/Data/*/pfx4:Message_Code,'101') or &#xA;contains($_error/ns4:ErrorReport/Data/*/pfx4:Message_Code,'102') or &#xA;contains($_error/ns4:ErrorReport/Data/*/pfx4:Message_Code,'103') or&#xA;contains($_error/ns4:ErrorReport/Data/*/pfx4:Message_Code,'201')">
+                <pfx2:Message>
+                    <xsl:value-of select="$_error/ns4:ErrorReport/Data/*/pfx4:Message"/>
+                </pfx2:Message>
+            </xsl:when>
+            <xsl:when test="exists($Login/resultSet/Record)">
+                <pfx2:Message>
+                    <xsl:value-of select="'login Success'"/>
+                </pfx2:Message>
+            </xsl:when>
+            <xsl:otherwise>
+                <pfx2:Message>
+                    <xsl:value-of select="'Invalid Input'"/>
+                </pfx2:Message>
+            </xsl:otherwise>
+        </xsl:choose>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType ref="pfx2:Message"/>
+    <pd:endX>699</pd:endX>
+    <pd:endY>81</pd:endY>
+    <pd:errorSchemas>
+        <Schema ref="pfx4:Root"/>
+    </pd:errorSchemas>
+    <pd:processVariables>
+        <Correlation-ID>
+            <xsd:element name="root" type="xsd:string"/>
+        </Correlation-ID>
+    </pd:processVariables>
+    <pd:targetNamespace>http://xmlns.example.com/1679981862078</pd:targetNamespace>
+    <pd:activity name="Assign">
+        <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
+        <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
+        <pd:x>215</pd:x>
+        <pd:y>81</pd:y>
+        <config>
+            <variableName>Correlation-ID</variableName>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <xsl:value-of select="CustomFuction:getUUID()"/>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="EndLog">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>567</pd:x>
+        <pd:y>81</pd:y>
+        <config>
+            <processName>/Common_Module/CommonLog.process</processName>
+        </config>
+        <pd:inputBindings>
+            <ns1:LogDetails>
+                <ns1:LogHeaders>
+                    <ns1:Correlation_Id>
+                        <xsl:value-of select="$Correlation-ID/root"/>
+                    </ns1:Correlation_Id>
+                    <ns1:Application_Name>
+                        <xsl:value-of select="'User_Login'"/>
+                    </ns1:Application_Name>
+                    <ns1:Process_Name>
+                        <xsl:value-of select="'Login'"/>
+                    </ns1:Process_Name>
+                    <ns1:Activity_Name>
+                        <xsl:value-of select="'JDBC Query'"/>
+                    </ns1:Activity_Name>
+                    <ns1:LogType>
+                        <xsl:value-of select="'END'"/>
+                    </ns1:LogType>
+                    <ns1:Message_Type>
+                        <xsl:value-of select="'ResponseLog'"/>
+                    </ns1:Message_Type>
+                    <ns1:Status>
+                        <xsl:value-of select="'End'"/>
+                    </ns1:Status>
+                    <ns1:Timestamp>
+                        <xsl:value-of select="current-dateTime()"/>
+                    </ns1:Timestamp>
+                </ns1:LogHeaders>
+            </ns1:LogDetails>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Generate Error">
+        <pd:type>com.tibco.pe.core.GenerateErrorActivity</pd:type>
+        <pd:resourceType>ae.activities.throw</pd:resourceType>
+        <pd:x>78</pd:x>
+        <pd:y>192</pd:y>
+        <config>
+            <faultName>Schema</faultName>
+        </config>
+        <pd:inputBindings>
+            <ns2:ActivityInput>
+                <xsl:choose>
+                    <xsl:when test="string-length($Start/pfx:Login/pfx:Username)=0">
+                        <data>
+                            <pfx4:Root>
+                                <pfx4:Message>
+                                    <xsl:value-of select="$_globalVariables/ns3:GlobalVariables/Validations/Error_Messages/User_Login/Username_Empty"/>
+                                </pfx4:Message>
+                                <pfx4:Message_Code>
+                                    <xsl:value-of select="'100'"/>
+                                </pfx4:Message_Code>
+                            </pfx4:Root>
+                        </data>
+                    </xsl:when>
+                    <xsl:when test="not(CustomFuction:matchRegex($Start/pfx:Login/pfx:Username,'[A-Za-z][A-Za-z0-9_]{1,9}'))">
+                        <data>
+                            <pfx4:Root>
+                                <pfx4:Message>
+                                    <xsl:value-of select="$_globalVariables/ns3:GlobalVariables/Validations/Error_Messages/User_Login/Username_Invalid"/>
+                                </pfx4:Message>
+                                <pfx4:Message_Code>
+                                    <xsl:value-of select="'101'"/>
+                                </pfx4:Message_Code>
+                            </pfx4:Root>
+                        </data>
+                    </xsl:when>
+                    <xsl:when test="string-length($Start/pfx:Login/pfx:Password)=0">
+                        <data>
+                            <pfx4:Root>
+                                <pfx4:Message>
+                                    <xsl:value-of select="$_globalVariables/ns3:GlobalVariables/Validations/Error_Messages/User_Login/Password_empty"/>
+                                </pfx4:Message>
+                                <pfx4:Message_Code>
+                                    <xsl:value-of select="'102'"/>
+                                </pfx4:Message_Code>
+                            </pfx4:Root>
+                        </data>
+                    </xsl:when>
+                    <xsl:when test="not(CustomFuction:matchRegex($Start/pfx:Login/pfx:Password,'[A-Za-z0-9]{1,8}'))">
+                        <data>
+                            <pfx4:Root>
+                                <pfx4:Message>
+                                    <xsl:value-of select="$_globalVariables/ns3:GlobalVariables/Validations/Error_Messages/User_Login/Password_Invalid"/>
+                                </pfx4:Message>
+                                <pfx4:Message_Code>
+                                    <xsl:value-of select="'103'"/>
+                                </pfx4:Message_Code>
+                            </pfx4:Root>
+                        </data>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <data>
+                            <pfx4:Root>
+                                <pfx4:Message>
+                                    <xsl:value-of select="'Input invalid'"/>
+                                </pfx4:Message>
+                                <pfx4:Message_Code>
+                                    <xsl:value-of select="'201'"/>
+                                </pfx4:Message_Code>
+                            </pfx4:Root>
+                        </data>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </ns2:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Login">
+        <pd:type>com.tibco.plugin.jdbc.JDBCQueryActivity</pd:type>
+        <pd:resourceType>ae.activities.JDBCQueryActivity</pd:resourceType>
+        <pd:x>447</pd:x>
+        <pd:y>81</pd:y>
+        <config>
+            <timeout>10</timeout>
+            <commit>false</commit>
+            <maxRows>100</maxRows>
+            <emptyStrAsNil>false</emptyStrAsNil>
+            <jdbcSharedConfig>/Connections/JDBC Connection.sharedjdbc</jdbcSharedConfig>
+            <statement>Select USERNAME, PASSWORD
+FROM AIRLINE_LOGIN
+WHERE USERNAME=? AND PASSWORD=?</statement>
+            <Prepared_Param_DataType>
+                <parameter>
+                    <parameterName>USERNAME</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>PASSWORD</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+            </Prepared_Param_DataType>
+            <QueryOutputCachedSchemaColumns>USERNAME</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>VARCHAR2</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>PASSWORD</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>VARCHAR2</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <oraObjects/>
+            <oraTables/>
+        </config>
+        <pd:inputBindings>
+            <jdbcQueryActivityInput>
+                <USERNAME>
+                    <xsl:choose>
+                        <xsl:when test="exists($Start/pfx:Login/pfx:Username)">
+                            <xsl:value-of select="$Start/pfx:Login/pfx:Username"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </USERNAME>
+                <PASSWORD>
+                    <xsl:choose>
+                        <xsl:when test="exists($Start/pfx:Login/pfx:Password)">
+                            <xsl:value-of select="$Start/pfx:Login/pfx:Password"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </PASSWORD>
+            </jdbcQueryActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="StartLog">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>327</pd:x>
+        <pd:y>81</pd:y>
+        <config>
+            <processName>/Common_Module/CommonLog.process</processName>
+        </config>
+        <pd:inputBindings>
+            <ns1:LogDetails>
+                <ns1:LogHeaders>
+                    <ns1:Correlation_Id>
+                        <xsl:value-of select="$Correlation-ID/root"/>
+                    </ns1:Correlation_Id>
+                    <ns1:Application_Name>
+                        <xsl:value-of select="'User_Login'"/>
+                    </ns1:Application_Name>
+                    <ns1:Process_Name>
+                        <xsl:value-of select="'Login'"/>
+                    </ns1:Process_Name>
+                    <ns1:Activity_Name>
+                        <xsl:value-of select="'JDBC Query'"/>
+                    </ns1:Activity_Name>
+                    <ns1:LogType>
+                        <xsl:value-of select="'START'"/>
+                    </ns1:LogType>
+                    <ns1:Message_Type>
+                        <xsl:value-of select="'RequestLog'"/>
+                    </ns1:Message_Type>
+                    <ns1:Status>
+                        <xsl:value-of select="'Start'"/>
+                    </ns1:Status>
+                    <ns1:Timestamp>
+                        <xsl:value-of select="current-dateTime()"/>
+                    </ns1:Timestamp>
+                    <ns1:Payload>
+                        <xsl:value-of select="concat($Start/pfx:Login/pfx:Username,$Start/pfx:Login/pfx:Password)"/>
+                    </ns1:Payload>
+                </ns1:LogHeaders>
+            </ns1:LogDetails>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="ErrorLog">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>693</pd:x>
+        <pd:y>188</pd:y>
+        <config>
+            <processName>/Common_Module/CommonLog.process</processName>
+        </config>
+        <pd:inputBindings>
+            <ns1:LogDetails>
+                <ns1:LogHeaders>
+                    <ns1:Correlation_Id>
+                        <xsl:value-of select="$Correlation-ID/root"/>
+                    </ns1:Correlation_Id>
+                    <ns1:Application_Name>
+                        <xsl:value-of select="'User_Login'"/>
+                    </ns1:Application_Name>
+                    <ns1:Process_Name>
+                        <xsl:value-of select="'Lgin'"/>
+                    </ns1:Process_Name>
+                    <ns1:Activity_Name>
+                        <xsl:value-of select="'catch All'"/>
+                    </ns1:Activity_Name>
+                    <ns1:LogType>
+                        <xsl:value-of select="'Error'"/>
+                    </ns1:LogType>
+                    <ns1:Message_Type>
+                        <xsl:value-of select="'Error Message'"/>
+                    </ns1:Message_Type>
+                    <ns1:Status>
+                        <xsl:value-of select="'Error'"/>
+                    </ns1:Status>
+                    <ns1:Timestamp>
+                        <xsl:value-of select="current-dateTime()"/>
+                    </ns1:Timestamp>
+                </ns1:LogHeaders>
+                <ns1:ErrorDetails>
+                    <ns1:ErrorCode>
+                        <xsl:value-of select="concat($Start/pfx:Login/pfx:Username,$Start/pfx:Login/pfx:Password)"/>
+                    </ns1:ErrorCode>
+                    <ns1:Error_Message>
+                        <xsl:value-of select="$Catch/exceptiondata/*"/>
+                    </ns1:Error_Message>
+                </ns1:ErrorDetails>
+            </ns1:LogDetails>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>585</pd:x>
+        <pd:y>189</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Assign</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>string-length($Start/pfx:Login/pfx:Username)!=0 and
+CustomFuction:matchRegex($Start/pfx:Login/pfx:Username,'[A-Za-z][A-Za-z0-9_]{1,9}') and
+string-length($Start/pfx:Login/pfx:Password)!=0 and 
+CustomFuction:matchRegex($Start/pfx:Login/pfx:Password,'[A-Za-z0-9]{1,8}')</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>EndLog</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>StartLog</pd:from>
+        <pd:to>Login</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Login</pd:from>
+        <pd:to>EndLog</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Assign</pd:from>
+        <pd:to>StartLog</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Generate Error</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>ErrorLog</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>ErrorLog</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

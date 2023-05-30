@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	 xmlns="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Common_Logging/Schema.xsd2"
+	 targetNamespace="http://www.tibco.com/schemas/Airline Reservation System/Schemas/Common_Logging/Schema.xsd2"
+	 elementFormDefault="qualified"
+	 attributeFormDefault="unqualified">
+	<xs:element name="Document" type="DocumentType"/>
+	<xs:complexType name="DocumentType">
+		<xs:sequence>
+			<xs:element ref="User_Registration" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="User_Registration" type="User_RegistrationType"/>
+	<xs:complexType name="User_RegistrationType">
+		<xs:sequence>
+			<xs:element ref="Create_Account" minOccurs="0"/>
+			<xs:element ref="Update_Account" minOccurs="0"/>
+			<xs:element ref="Get_UserDetails" minOccurs="0"/>
+			<xs:element ref="Delete_Profile"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Create_Account" type="Create_AccountType"/>
+	<xs:element name="Update_Account" type="Update_AccountType"/>
+	<xs:element name="Get_UserDetails" type="Get_UserDetailsType"/>
+	<xs:element name="Delete_Profile" type="Delete_ProfileType"/>
+	<xs:complexType name="Create_AccountType">
+		<xs:sequence>
+			<xs:element ref="Firstname" minOccurs="0"/>
+			<xs:element ref="Lastname" minOccurs="0"/>
+			<xs:element ref="Email" minOccurs="0"/>
+			<xs:element ref="Country" minOccurs="0"/>
+			<xs:element ref="Pincode" minOccurs="0"/>
+			<xs:element ref="Phone_no" minOccurs="0"/>
+			<xs:element ref="State" minOccurs="0"/>
+			<xs:element ref="Username" minOccurs="0"/>
+			<xs:element ref="Password" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Update_AccountType">
+		<xs:sequence>
+			<xs:element ref="Firstname" minOccurs="0"/>
+			<xs:element ref="Lastname" minOccurs="0"/>
+			<xs:element ref="Email" minOccurs="0"/>
+			<xs:element ref="Country" minOccurs="0"/>
+			<xs:element ref="Pincode" minOccurs="0"/>
+			<xs:element ref="Phone_no" minOccurs="0"/>
+			<xs:element ref="State" minOccurs="0"/>
+			<xs:element ref="Username" minOccurs="0"/>
+			<xs:element ref="Password" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Get_UserDetailsType">
+		<xs:sequence>
+			<xs:element ref="Email" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Delete_ProfileType">
+		<xs:sequence>
+			<xs:element ref="Email" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Firstname" type="xs:string"/>
+	<xs:element name="Lastname" type="xs:string"/>
+	<xs:element name="Email" type="xs:string"/>
+	<xs:element name="Country" type="xs:string"/>
+	<xs:element name="Pincode" type="xs:string"/>
+	<xs:element name="Phone_no" type="xs:string"/>
+	<xs:element name="State" type="xs:string"/>
+	<xs:element name="Username" type="xs:string"/>
+	<xs:element name="Password" type="xs:string"/>
+</xs:schema>

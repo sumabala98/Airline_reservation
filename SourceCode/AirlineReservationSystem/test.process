@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:CustomFuction="java://java_uuidcode.java_uuidcode" xmlns:pfx="http://www.tibco.com/schemas/Airline Reservation System/Admin_schema/Flight_Details.xsd">
+    <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/Airline Reservation System/Admin_schema/Flight_Details.xsd" schemaLocation="/Admin_Module/Admin_schema/Admin_Flight/New_Flight_Detail.xsd"/>
+    <pd:name>test.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startX>125</pd:startX>
+    <pd:startY>91</pd:startY>
+    <pd:returnBindings/>
+    <pd:endName>End</pd:endName>
+    <pd:endX>518</pd:endX>
+    <pd:endY>93</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1682062304316</pd:targetNamespace>
+    <pd:activity name="Log">
+        <pd:type>com.tibco.pe.core.WriteToLogActivity</pd:type>
+        <pd:resourceType>ae.activities.log</pd:resourceType>
+        <pd:x>243</pd:x>
+        <pd:y>95</pd:y>
+        <config>
+            <role>User</role>
+        </config>
+        <pd:inputBindings>
+            <ns:ActivityInput>
+                <message>
+                    <xsl:value-of select="CustomFuction:matchRegex('6E7201', '^[a-z,A-Z\d\-_\s]+$')"/>
+                </message>
+            </ns:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="regx">
+        <pd:type>com.tibco.pe.core.WriteToLogActivity</pd:type>
+        <pd:resourceType>ae.activities.log</pd:resourceType>
+        <pd:x>359</pd:x>
+        <pd:y>100</pd:y>
+        <config>
+            <role>User</role>
+        </config>
+        <pd:inputBindings>
+            <ns:ActivityInput>
+                <message>
+                    <xsl:value-of select="CustomFuction:matchRegex('suma', '^[a-zA-Z\s]{1,100}$')"/>
+                </message>
+                <msgCode>
+                    <xsl:value-of select="''"/>
+                </msgCode>
+            </ns:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Render JSON">
+        <pd:type>com.tibco.plugin.json.activities.JSONRenderActivity</pd:type>
+        <pd:resourceType>ae.activities.JSONRenderActivity</pd:resourceType>
+        <pd:x>130</pd:x>
+        <pd:y>232</pd:y>
+        <config>
+            <SchemaType>xsdType</SchemaType>
+            <BadgerfishCheck>false</BadgerfishCheck>
+            <ActivityInputEditor ref="pfx:Flight_Details"/>
+        </config>
+        <pd:inputBindings>
+            <ns2:ActivityInputClass>
+                <pfx:Flight_Details>
+                    <pfx:Flights>
+                        <pfx:Airline>
+                            <xsl:value-of select="&quot;abc&quot;"/>
+                        </pfx:Airline>
+                        <pfx:Flight_number>
+                            <xsl:value-of select="&quot;abc&quot;"/>
+                        </pfx:Flight_number>
+                        <pfx:Departure>
+                            <xsl:value-of select="&quot;abc&quot;"/>
+                        </pfx:Departure>
+                        <pfx:Arrival>
+                            <xsl:value-of select="&quot;abc&quot;"/>
+                        </pfx:Arrival>
+                        <pfx:Departure_Date>
+                            <xsl:value-of select="&quot;abc&quot;"/>
+                        </pfx:Departure_Date>
+                        <pfx:Arrival_Date>
+                            <xsl:value-of select="&quot;abc&quot;"/>
+                        </pfx:Arrival_Date>
+                        <pfx:Departure_Time>
+                            <xsl:value-of select="&quot;abc&quot;"/>
+                        </pfx:Departure_Time>
+                        <pfx:Arrival_Time>
+                            <xsl:value-of select="&quot;abc&quot;"/>
+                        </pfx:Arrival_Time>
+                        <pfx:Duration>
+                            <xsl:value-of select="&quot;abc&quot;"/>
+                        </pfx:Duration>
+                        <pfx:Price>
+                            <xsl:value-of select="&quot;abc&quot;"/>
+                        </pfx:Price>
+                        <pfx:Status>
+                            <xsl:value-of select="&quot;abc&quot;"/>
+                        </pfx:Status>
+                    </pfx:Flights>
+                </pfx:Flight_Details>
+            </ns2:ActivityInputClass>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Log</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>1=1</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Log</pd:from>
+        <pd:to>regx</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>regx</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Render JSON</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>
